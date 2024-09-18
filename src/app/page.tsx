@@ -1,11 +1,9 @@
-import { api, HydrateClient } from "~/trpc/server";
+import { HydrateClient } from "~/trpc/server";
 
 import CreatePost from "./_components/create-post";
 import PostList from "./_components/post-list";
 
 export default async function Home() {
-  void api.post.getList.prefetch();
-
   return (
     <HydrateClient>
       <main>

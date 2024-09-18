@@ -9,13 +9,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "~/trpc/react";
 
-export default function PostComponent({
-  post,
-  triggerRefresh,
-}: {
-  post: Post;
-  triggerRefresh: () => void;
-}) {
+export default function PostComponent({ post }: { post: Post }) {
   const [liked, setLiked] = useState(false);
   const toggleLike = api.post.togglePostLike.useMutation({
     onSuccess: () => {
@@ -29,9 +23,7 @@ export default function PostComponent({
   });
 
   const deletePost = api.post.delete.useMutation({
-    onSuccess: () => {
-      triggerRefresh();
-    },
+    onSuccess: () => {},
   });
 
   const isAlreadyLiked = api.post.hasLiked.useQuery(
