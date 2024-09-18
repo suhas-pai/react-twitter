@@ -6,17 +6,13 @@ import { api } from "~/trpc/react";
 
 export default function PostList() {
   const [postList, query] = api.post.getList.useSuspenseQuery();
-  const triggerRefresh = () => {
-    query.refetch();
-  };
-
   return (
     <div className="flex w-full max-w-lg flex-col items-center">
       {postList.map((post) => (
         <PostComponent
           key={post.id}
           post={post}
-          triggerRefresh={triggerRefresh}
+          triggerRefresh={query.refetch}
         />
       ))}
     </div>
