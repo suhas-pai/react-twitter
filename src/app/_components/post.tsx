@@ -1,47 +1,34 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-
 import { Button } from "~/components/ui/button";
 import { Heart, MessageCircle, Share, Trash } from "lucide-react";
 import { Post } from "~/lib/post";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { api } from "~/trpc/react";
+import { api } from "~/trpc/client";
 
 export default function PostComponent({ post }: { post: Post }) {
-  const [liked, setLiked] = useState(false);
   const toggleLike = api.post.togglePostLike.useMutation({
-    onSuccess: () => {
-      setLiked((prev) => !prev);
-      if (liked) {
-        post.likes--;
-      } else {
+    onSuccess: async () => {
+      post.isLiked = !post.isLiked;
+      if (post.isLiked) {
         post.likes++;
+      } else {
+        post.likes--;
       }
     },
   });
 
+  const utils = api.useUtils();
   const deletePost = api.post.delete.useMutation({
-    onSuccess: () => {},
+    onSuccess: async () => {
+      await utils.post.invalidate();
+    },
   });
 
-  const isAlreadyLiked = api.post.hasLiked.useQuery(
-    {
-      postId: post.id,
-    },
-    {
-      staleTime: Infinity,
-    },
-  );
-
-  useEffect(() => {
-    setLiked(isAlreadyLiked.data || false);
-  }, [isAlreadyLiked.data]);
-
   return (
-    <div className="flex min-h-9 w-full flex-col border border-gray-200 px-4 pb-2 pt-4 text-gray-800">
-      <div className="mb-2 flex items-start gap-2">
+    <div className="flex min-h-16 w-full min-w-48 flex-col border border-gray-200 px-4 pb-2 pt-4 text-gray-800">
+      <div className="mb-2 flex items-start gap-3">
         <div className="avatar">
           <Link
             href={`/profile/${post.user.name}`}
@@ -70,7 +57,7 @@ export default function PostComponent({ post }: { post: Post }) {
               <span>{"Just Now"}</span>
             </span>
           </div>
-          <div className="mt-1 flex flex-col gap-3">
+          <div className="mt-1 flex w-full min-w-fit flex-col gap-3">
             <span className="text-gray-800">{post.content}</span>
             {post.images.slice(0, 4).map((image, index) => (
               <img
@@ -84,32 +71,36 @@ export default function PostComponent({ post }: { post: Post }) {
         </div>
         <div className="w-full px-2">
           <span className="flex justify-end">
-            <button
-              className="enabled:hover:text-red-400"
+            <Button
+              variant="ghost"
+              className="cursor-pointer hover:text-red-500 disabled:text-gray-300"
+              size="sm"
               onClick={() => deletePost.mutate({ postId: post.id })}
               disabled={deletePost.isPending}
             >
-              <Trash size={20} className="cursor-pointer" />
-            </button>
+              <Trash size={16} />
+            </Button>
           </span>
         </div>
       </div>
       <div className="flex justify-between">
         <Button
+          className="cursor-pointer"
           variant="ghost"
           size="sm"
           onClick={() => toggleLike.mutate({ postId: post.id })}
           disabled={
-            toggleLike.isPending ||
-            isAlreadyLiked.isPending ||
-            deletePost.isPending ||
-            deletePost.isSuccess
+            toggleLike.isPending || deletePost.isPending || deletePost.isSuccess
           }
         >
-          <Heart className="mr-2 h-4 w-4" fill={liked ? "red" : "none"} />
+          <Heart
+            className="mr-2 h-4 w-4"
+            fill={post.isLiked ? "red" : "none"}
+          />
           {post.likes}
         </Button>
         <Button
+          className="cursor-pointer"
           variant="ghost"
           size="sm"
           disabled={deletePost.isPending || deletePost.isSuccess}
@@ -118,6 +109,7 @@ export default function PostComponent({ post }: { post: Post }) {
           {post.comments}
         </Button>
         <Button
+          className="cursor-pointer"
           variant="ghost"
           size="sm"
           disabled={deletePost.isPending || deletePost.isSuccess}

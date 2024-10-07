@@ -1,5 +1,6 @@
 "use client";
-import { api } from "~/trpc/react";
+
+import { api } from "~/trpc/client";
 
 export function LatestPost() {
   const [latestPost] = api.post.getLatest.useSuspenseQuery();

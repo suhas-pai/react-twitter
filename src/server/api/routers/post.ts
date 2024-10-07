@@ -15,7 +15,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: publicProcedure
-    .input(z.object({ content: z.string().min(1) }))
+    .input(z.object({ content: z.string().min(2) }))
     .mutation(async ({ ctx, input }) => {
       if (input.content.length > 100) {
         throw new Error("Text is too long");
@@ -49,13 +49,24 @@ export const postRouter = createTRPCRouter({
         ),
       );
 
-    return list.map(
-      (post): Post => ({
+    // FIXME: Move this to the db
+    let postList: Post[] = [];
+    for (const post of list) {
+      const isLikedQuery = await ctx.db
+        .select({ count: count() })
+        .from(userLikes)
+        .where(and(eq(userLikes.userId, 1), eq(userLikes.postId, post.id)));
+
+      const isLiked = isLikedQuery[0]?.count ?? 0;
+      postList.push({
         ...post,
         user: userList.find((user) => user.id === post.userId)!,
         comments: commentCount[0]?.count ?? 0,
-      }),
-    );
+        isLiked: isLiked > 0,
+      });
+    }
+
+    return postList;
   }),
 
   getLatest: publicProcedure.query(async ({ ctx }) => {
@@ -65,16 +76,6 @@ export const postRouter = createTRPCRouter({
 
     return post ?? null;
   }),
-
-  hasLiked: publicProcedure
-    .input(z.object({ postId: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const hasLike = await ctx.db.query.userLikes.findFirst({
-        where: and(eq(userLikes.userId, 1), eq(userLikes.postId, input.postId)),
-      });
-
-      return !!hasLike;
-    }),
 
   togglePostLike: publicProcedure
     .input(z.object({ postId: z.number() }))

@@ -8,4 +8,5 @@ export type Post = {
   comments: number;
   shares: number;
   images: string[];
+  isLiked: boolean;
 };
