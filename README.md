@@ -1,50 +1,30 @@
-# React + TypeScript + Vite
+# React Twitter
+### React + TypeScript + TanStack Router + Vinxi
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An remake of X (formerly Twitter) with the technologies listed above
 
-Currently, two official plugins are available:
+Currently a work-in-progress, the following will soon be integrated.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [@clerk/clerk-react](https://clerk.com/docs/quickstarts/react) for user authentication
+- [@uploadthing/react](https://docs.uploadthing.com/api-reference/react) for image uploading for user posts
 
-## Expanding the ESLint configuration
+This project will be migrated to `TanStack Start` once the meta-framework reaches v1.0
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Configuration
 
-- Configure the top-level `parserOptions` property like this:
+This project can be built for development and production locally, or for a vercel environment.
+Create a `.env` file as such, take a look at `.env.example` for a list of necessary variables.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+This project also provides a `./start_database.sh` file to help create a local `postgres` database
+using `Docker`. See comments inside the script file for more information.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Building
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+This project uses the `pnpm` package manager. The following commands are available for running/building this project:
+- `pnpm run dev` (for development)
+- `pnpm run build` (for production)
+- `pnpm run start` (for production)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Note that at time of writing, `pnpm run start` is currently not supported due to an issue in `vinxi`
+
+This project also has several commands (provided by `drizzle`) to investigate the `postgres` database linked in your `.env`. See `package.json` for more information

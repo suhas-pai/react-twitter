@@ -11,8 +11,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "start": "vinxi start",
-    "lint": "eslint .",
-    "preview": "vinx preview"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.2",
