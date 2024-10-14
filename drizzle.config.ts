@@ -1,11 +1,11 @@
 import { type Config } from "drizzle-kit";
-import env from "./env";
+import dotenv from "dotenv";
 
 export default {
   schema: "./app/server/db/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: env.POSTGRES_URL,
+    url: dotenv.config().parsed?.POSTGRES_URL ?? "",
   },
   tablesFilter: ["react-twitter_*"],
 } satisfies Config;

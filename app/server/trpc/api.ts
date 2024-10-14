@@ -2,8 +2,12 @@ import { initTRPC } from "@trpc/server";
 import { db } from "~/server/db";
 import { ZodError } from "zod";
 import superjson from "superjson";
+import { clerkAuthClient } from "~/server/auth/clerk";
 
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = async (opts: {
+  headers: Headers;
+  req: Request;
+}) => {
   return {
     db,
     ...opts,
@@ -42,4 +46,28 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
+const authMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (!clerkAuthClient) {
+    throw new Error(`Unauthorized: ${Object.keys(ctx)}`);
+  }
+
+  try {
+    // Verify the Clerk token using ClerkClient
+    const requestState = await clerkAuthClient.authenticateRequest(ctx.req);
+    if (!requestState.isSignedIn) {
+      throw new Error("Not logged in");
+    }
+
+    // Pass the user information to the tRPC context
+    return next({
+      ctx: {
+        user: requestState.toAuth(),
+      },
+    });
+  } catch (error) {
+    throw new Error(`Authentication failed: ${error}`);
+  }
+});
+
 export const timedProcedure = t.procedure.use(timingMiddleware);
+export const protectedProcedure = timedProcedure.use(authMiddleware);

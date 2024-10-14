@@ -33,7 +33,11 @@ export default defineEventHandler((event) => {
     router: appRouter,
 
     createContext() {
-      return { db, headers: request.headers };
+      return {
+        db,
+        headers: request.headers,
+        req: request,
+      };
     },
   });
 });

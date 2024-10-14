@@ -43,7 +43,7 @@ export const images = createTable(
 export const users = createTable(
   "users",
   {
-    id: serial("id").primaryKey(),
+    id: text().primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     displayName: varchar("display_name", { length: 256 }).notNull(),
     iconUrl: varchar("icon_url")
@@ -70,15 +70,17 @@ export const users = createTable(
 export const posts = createTable(
   "posts",
   {
-    id: serial("id").primaryKey(),
-    userId: serial("user_id").references(() => users.id, {
-      onDelete: "cascade",
-    }),
+    id: serial().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
     parentId: integer("parent_id"),
     content: text("content").notNull(),
-    likes: integer("likes").notNull().default(0),
-    shares: integer("shares").notNull().default(0),
-    images: text("images").array().notNull().default([]),
+    likes: integer().notNull().default(0),
+    shares: integer().notNull().default(0),
+    images: text().array().notNull().default([]),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -99,9 +101,11 @@ export const posts = createTable(
 export const userLikes = createTable(
   "user_likes",
   {
-    userId: serial("user_id").references(() => users.id, {
-      onDelete: "cascade",
-    }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
     postId: serial("post_id").references(() => posts.id, {
       onDelete: "cascade",
     }),

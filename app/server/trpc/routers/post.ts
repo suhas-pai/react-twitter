@@ -1,3 +1,4 @@
+import { protectedProcedure } from "~/server/trpc/api";
 import { Post } from "~/lib/post";
 import { z } from "zod";
 
@@ -7,12 +8,13 @@ import { posts, users, userLikes } from "~/server/db/schema";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 
 export const postRouter = createTRPCRouter({
-  create: timedProcedure
+  create: protectedProcedure
     .input(z.object({ content: z.string().min(2) }))
     .mutation(async ({ ctx, input }) => {
       if (input.content.length > 100) {
         throw new Error("Text is too long");
       }
+
       await ctx.db.insert(posts).values({
         content: input.content,
         userId: 1, // FIXME
