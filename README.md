@@ -1,5 +1,5 @@
 # React Twitter
-### React + TypeScript + TanStack Router + Vinxi
+### React + TypeScript + TanStack Router + Vinxi + shadcn/ui
 
 An remake of X (formerly Twitter) with the technologies listed above
 
