@@ -16,23 +16,18 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const SignUpLazyImport = createFileRoute('/sign-up')()
-const SignInLazyImport = createFileRoute('/sign-in')()
+const SignupLazyImport = createFileRoute('/signup')()
 const NotificationsLazyImport = createFileRoute('/notifications')()
 const MessagesLazyImport = createFileRoute('/messages')()
+const LoginLazyImport = createFileRoute('/login')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
-const SignUpLazyRoute = SignUpLazyImport.update({
-  path: '/sign-up',
+const SignupLazyRoute = SignupLazyImport.update({
+  path: '/signup',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/sign-up.lazy').then((d) => d.Route))
-
-const SignInLazyRoute = SignInLazyImport.update({
-  path: '/sign-in',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/sign-in.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
 
 const NotificationsLazyRoute = NotificationsLazyImport.update({
   path: '/notifications',
@@ -43,6 +38,11 @@ const MessagesLazyRoute = MessagesLazyImport.update({
   path: '/messages',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/messages.lazy').then((d) => d.Route))
+
+const LoginLazyRoute = LoginLazyImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -60,6 +60,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/messages': {
       id: '/messages'
       path: '/messages'
@@ -74,18 +81,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsLazyImport
       parentRoute: typeof rootRoute
     }
-    '/sign-in': {
-      id: '/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof SignInLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/sign-up': {
-      id: '/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof SignUpLazyImport
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -95,58 +95,52 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/login': typeof LoginLazyRoute
   '/messages': typeof MessagesLazyRoute
   '/notifications': typeof NotificationsLazyRoute
-  '/sign-in': typeof SignInLazyRoute
-  '/sign-up': typeof SignUpLazyRoute
+  '/signup': typeof SignupLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/login': typeof LoginLazyRoute
   '/messages': typeof MessagesLazyRoute
   '/notifications': typeof NotificationsLazyRoute
-  '/sign-in': typeof SignInLazyRoute
-  '/sign-up': typeof SignUpLazyRoute
+  '/signup': typeof SignupLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/login': typeof LoginLazyRoute
   '/messages': typeof MessagesLazyRoute
   '/notifications': typeof NotificationsLazyRoute
-  '/sign-in': typeof SignInLazyRoute
-  '/sign-up': typeof SignUpLazyRoute
+  '/signup': typeof SignupLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/messages' | '/notifications' | '/sign-in' | '/sign-up'
+  fullPaths: '/' | '/login' | '/messages' | '/notifications' | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/messages' | '/notifications' | '/sign-in' | '/sign-up'
-  id:
-    | '__root__'
-    | '/'
-    | '/messages'
-    | '/notifications'
-    | '/sign-in'
-    | '/sign-up'
+  to: '/' | '/login' | '/messages' | '/notifications' | '/signup'
+  id: '__root__' | '/' | '/login' | '/messages' | '/notifications' | '/signup'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  LoginLazyRoute: typeof LoginLazyRoute
   MessagesLazyRoute: typeof MessagesLazyRoute
   NotificationsLazyRoute: typeof NotificationsLazyRoute
-  SignInLazyRoute: typeof SignInLazyRoute
-  SignUpLazyRoute: typeof SignUpLazyRoute
+  SignupLazyRoute: typeof SignupLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  LoginLazyRoute: LoginLazyRoute,
   MessagesLazyRoute: MessagesLazyRoute,
   NotificationsLazyRoute: NotificationsLazyRoute,
-  SignInLazyRoute: SignInLazyRoute,
-  SignUpLazyRoute: SignUpLazyRoute,
+  SignupLazyRoute: SignupLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -162,14 +156,17 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/login",
         "/messages",
         "/notifications",
-        "/sign-in",
-        "/sign-up"
+        "/signup"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/login": {
+      "filePath": "login.lazy.tsx"
     },
     "/messages": {
       "filePath": "messages.lazy.tsx"
@@ -177,11 +174,8 @@ export const routeTree = rootRoute
     "/notifications": {
       "filePath": "notifications.lazy.tsx"
     },
-    "/sign-in": {
-      "filePath": "sign-in.lazy.tsx"
-    },
-    "/sign-up": {
-      "filePath": "sign-up.lazy.tsx"
+    "/signup": {
+      "filePath": "signup.lazy.tsx"
     }
   }
 }

@@ -2,11 +2,8 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { ThemeProvider, useTheme } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { TRPCReactProvider } from "./trpc";
-
-import { ClerkProvider } from "@clerk/clerk-react";
-import { dark } from "@clerk/themes";
 
 import "./index.css";
 
@@ -27,24 +24,6 @@ declare module "@tanstack/react-router" {
   }
 }
 
-// Import your publishable key
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Clerk Publishable Key");
-}
-
-function ClerkWithThemeProvider({ children }: { children: React.ReactNode }) {
-  const { theme } = useTheme();
-  return (
-    <ClerkProvider
-      publishableKey={PUBLISHABLE_KEY}
-      appearance={theme === "dark" ? { baseTheme: dark } : {}}
-    >
-      {children}
-    </ClerkProvider>
-  );
-}
-
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
@@ -53,9 +32,7 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <ThemeProvider storageKey="vite-ui-theme">
         <TRPCReactProvider>
-          <ClerkWithThemeProvider>
-            <RouterProvider router={router} />
-          </ClerkWithThemeProvider>
+          <RouterProvider router={router} />
         </TRPCReactProvider>
       </ThemeProvider>
       <TanStackRouterDevtools router={router} />

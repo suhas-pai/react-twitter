@@ -28,6 +28,14 @@ export default createApp({
       plugins: () => [tsconfigPaths(), reactRefresh()],
     },
     {
+      type: "http",
+      name: "api",
+      base: "/api/betterauth",
+      handler: "./app/server/auth/betterauth.ts",
+      target: "server",
+      plugins: () => [tsconfigPaths(), reactRefresh()],
+    },
+    {
       type: "spa",
       name: "client",
       handler: "./index.html",

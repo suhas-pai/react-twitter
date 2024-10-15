@@ -13,12 +13,6 @@ import ProfileButton from "./profile-dropdown";
 import CreatePost from "./create-post";
 import { Link } from "@tanstack/react-router";
 import { Input } from "./ui/input";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/clerk-react";
 
 export default function NavBar() {
   return (
@@ -79,18 +73,6 @@ export default function NavBar() {
                 <Settings className="h-4 w-4" />
               </Button>
             </ProfileButton>
-            <SignedIn>
-              <div className="flex items-center ml-5">
-                <UserButton />
-              </div>
-            </SignedIn>
-            <SignedOut>
-              <SignInButton mode="modal">
-                <Button variant="outline" size="sm" className="ml-5">
-                  Sign In
-                </Button>
-              </SignInButton>
-            </SignedOut>
           </div>
         </div>
       </nav>

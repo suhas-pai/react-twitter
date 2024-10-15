@@ -1,5 +1,3 @@
-import { useAuth } from "@clerk/clerk-react";
-
 export enum FeedType {
   FOR_YOU = "For You",
   FOLLOWING = "Following",
@@ -40,7 +38,6 @@ export default function PostFeedTabs({
   setFeedType: (type: FeedType) => void;
   disabled?: boolean;
 }) {
-  const auth = useAuth();
   return (
     <div className="flex w-full max-w-lg flex-col items-center">
       <div className="flex w-full border-b min-w-96">
@@ -56,7 +53,7 @@ export default function PostFeedTabs({
           setFeedType={setFeedType}
           selected={selectedFeedType === FeedType.FOLLOWING}
           isRight={true}
-          disabled={disabled ?? auth.isSignedIn === false}
+          disabled={disabled ?? false}
         />
       </div>
     </div>

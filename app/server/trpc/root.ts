@@ -2,7 +2,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { defineEventHandler, toWebRequest } from "vinxi/http";
 import { createCallerFactory, createTRPCRouter } from "~/server/trpc/api";
 import { postRouter } from "~/server/trpc/routers/post";
-import { db } from "~/server/db";
+import { db } from "~/server/db/drizzle";
 
 /**
  * This is the primary router for your server.

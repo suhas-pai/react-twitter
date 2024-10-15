@@ -7,14 +7,14 @@ import { createQueryClient } from "~/trpc/query-client";
 import { useState } from "react";
 import superjson from "superjson";
 
-function getBaseUrl() {
+export function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
 function getUrl() {
-  const url = `/api/trpc`;
+  const url = `${getBaseUrl()}/api/trpc`;
   return url;
 }
 

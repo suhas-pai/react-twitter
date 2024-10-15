@@ -3,6 +3,7 @@
 
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   foreignKey,
   index,
   integer,
@@ -46,6 +47,8 @@ export const users = createTable(
     id: text().primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     displayName: varchar("display_name", { length: 256 }).notNull(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("emailVerified").notNull(),
     iconUrl: varchar("icon_url")
       .default(sql`''`)
       .notNull(),
@@ -66,6 +69,37 @@ export const users = createTable(
     nameIndex: index("name_idx").on(example.name),
   })
 );
+
+export const session = createTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  ipAddress: text("ipAddress"),
+  userAgent: text("userAgent"),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id),
+});
+
+export const account = createTable("account", {
+  id: text("id").primaryKey(),
+  accountId: text("accountId").notNull(),
+  providerId: text("providerId").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id),
+  accessToken: text("accessToken"),
+  refreshToken: text("refreshToken"),
+  idToken: text("idToken"),
+  expiresAt: timestamp("expiresAt"),
+  password: text("password"),
+});
+
+export const verification = createTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+});
 
 export const posts = createTable(
   "posts",

@@ -5,7 +5,9 @@ export const Route = createRootRouteWithContext<{}>()({
   component: () => (
     <>
       <NavBar />
-      <Outlet />
+      <div className="rest-of-page">
+        <Outlet />
+      </div>
     </>
   ),
   scripts: () =>

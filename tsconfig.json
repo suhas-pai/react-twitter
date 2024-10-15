@@ -11,6 +11,8 @@
     "allowJs": true,
     "checkJs": true,
     "resolveJsonModule": true,
+    "declaration": false,
+    "declarationMap": false,
 
     /* Linting */
     "strict": true,
@@ -39,8 +41,5 @@
       "@/*": ["./app/*"]
     }
   },
-  "include": [
-    "app/**/*.ts",
-    "app/**/*.tsx",
-  ],
+  "include": [ "**/*.ts", "**/*.tsx" ]
 }

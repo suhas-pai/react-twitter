@@ -1,14 +1,13 @@
-import { protectedProcedure } from "~/server/trpc/api";
 import { Post } from "~/lib/post";
 import { z } from "zod";
 
 import { timedProcedure } from "~/server/trpc/api";
 import { createTRPCRouter } from "~/server/trpc/api";
-import { posts, users, userLikes } from "~/server/db/schema";
+import { posts, users, userLikes } from "~/server/db/drizzle/schema";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 
 export const postRouter = createTRPCRouter({
-  create: protectedProcedure
+  create: timedProcedure
     .input(z.object({ content: z.string().min(2) }))
     .mutation(async ({ ctx, input }) => {
       if (input.content.length > 100) {
@@ -17,7 +16,7 @@ export const postRouter = createTRPCRouter({
 
       await ctx.db.insert(posts).values({
         content: input.content,
-        userId: 1, // FIXME
+        userId: "1", // FIXME
       });
     }),
   list: timedProcedure.query(async ({ ctx }): Promise<Post[]> => {
@@ -49,7 +48,7 @@ export const postRouter = createTRPCRouter({
       const isLikedQuery = await ctx.db
         .select({ count: count() })
         .from(userLikes)
-        .where(and(eq(userLikes.userId, 1), eq(userLikes.postId, post.id)));
+        .where(and(eq(userLikes.userId, "1"), eq(userLikes.postId, post.id)));
 
       const isLiked = isLikedQuery[0]?.count ?? 0;
       postList.push({
@@ -76,7 +75,10 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const hasLike = await ctx.db.query.userLikes.findFirst({
         // FIXME:
-        where: and(eq(userLikes.userId, 1), eq(userLikes.postId, input.postId)),
+        where: and(
+          eq(userLikes.userId, "1"),
+          eq(userLikes.postId, input.postId)
+        ),
       });
 
       if (hasLike) {
@@ -91,7 +93,7 @@ export const postRouter = createTRPCRouter({
 
         const result2 = await ctx.db.delete(userLikes).where(
           // FIXME:
-          and(eq(userLikes.userId, 1), eq(userLikes.postId, input.postId))
+          and(eq(userLikes.userId, "1"), eq(userLikes.postId, input.postId))
         );
 
         if (!result2) {
@@ -109,7 +111,7 @@ export const postRouter = createTRPCRouter({
 
         const result2 = await ctx.db.insert(userLikes).values({
           postId: input.postId,
-          userId: 1, // FIXME:
+          userId: "1", // FIXME:
         });
 
         if (!result2) {
