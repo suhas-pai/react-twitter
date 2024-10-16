@@ -1,18 +1,15 @@
 import {
-  organizationClient,
   passkeyClient,
   twoFactorClient,
   adminClient,
 } from "better-auth/client/plugins";
 
 import { createAuthClient } from "better-auth/react";
-import { defineEventHandler } from "vinxi/http";
 import { getBaseUrl } from "~/client/trpc";
 
 export const betterAuthClient = createAuthClient({
-  baseURL: getBaseUrl(),
+  baseURL: `${getBaseUrl()}/api/betterauth`,
   plugins: [
-    organizationClient(),
     twoFactorClient({
       redirect: true,
       twoFactorPage: "/two-factor",
@@ -28,5 +25,3 @@ export const betterAuthClient = createAuthClient({
     },
   },
 });
-
-export default defineEventHandler((event) => console.log(event));

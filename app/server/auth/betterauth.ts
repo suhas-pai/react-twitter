@@ -1,13 +1,27 @@
 import { betterAuth } from "better-auth";
 import { db } from "~/server/db/drizzle";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { defineEventHandler, toWebRequest } from "vinxi/http";
+import { getBaseUrl } from "~/client/trpc";
+import { account, session, users, verification } from "../db/drizzle/schema";
 
 export const auth: any = betterAuth({
+  basePath: "/api/betterauth",
+  baseURL: getBaseUrl(),
   database: drizzleAdapter(db, {
-    provider: "sqlite", // or "pg" or "mysql"
+    provider: "pg", // or "pg" or "mysql"
+    schema: {
+      users,
+      session,
+      account,
+      verification,
+    },
   }),
   emailAndPassword: {
     enabled: true,
+
+    minPasswordLength: 6,
+    maxPasswordLength: 50,
 
     sendEmailVerificationOnSignUp: true,
     sendResetPasswordEmail: true,
@@ -15,20 +29,10 @@ export const auth: any = betterAuth({
     sendResetPassword: async () => {},
     sendVerificationEmail: async () => {},
   },
-  cookie: {
-    name: "betterauth",
-    options: {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
-  providers: {
-    discord: {
-      id: "discord",
-      name: "Discord",
-    },
-  },
-  debug: process.env.NODE_ENV === "development",
   secret: process.env.BETTERAUTH_SECRET,
+});
+
+export default defineEventHandler((event) => {
+  const request = toWebRequest(event);
+  console.log(request);
 });

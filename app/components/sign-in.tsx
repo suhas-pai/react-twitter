@@ -28,7 +28,18 @@ import { Link } from "@tanstack/react-router";
 
 import { betterAuthClient } from "~/client/auth/betterauth";
 
-async function handleSubmit(values: z.infer<typeof formSchema>) {}
+async function handleSubmit(values: z.infer<typeof formSchema>) {
+  const { email, password } = values;
+  await betterAuthClient.signIn.email({
+    email,
+    password,
+    fetchOptions: {
+      onSuccess(ctx: any) {
+        console.log(ctx);
+      },
+    },
+  });
+}
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email address is invalid" }),
