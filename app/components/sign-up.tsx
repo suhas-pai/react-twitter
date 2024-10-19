@@ -28,6 +28,7 @@ import { Link } from "@tanstack/react-router";
 
 import { AtSign, Check, Eye, EyeOff, X } from "lucide-react";
 import { useMemo, useState } from "react";
+import { authSchema } from "~/lib/auth/schema";
 
 function handleSubmit() {
   // TODO
@@ -37,12 +38,20 @@ const formSchema = z.object({
   displayName: z.string().max(50, { message: "Display name is too long" }),
   username: z
     .string()
-    .min(2, { message: "Username must be at least 2 characters" })
-    .max(50, { message: "Username must be less than 50 characters" }),
+    .min(authSchema.usernameMinLength, {
+      message: "Username must be at least 2 characters",
+    })
+    .max(authSchema.usernameMaxLength, {
+      message: "Username must be less than 50 characters",
+    }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" })
-    .max(50, { message: "Password must be less than 50 characters" }),
+    .min(authSchema.passwordMinLength, {
+      message: "Password must be at least 6 characters",
+    })
+    .max(authSchema.passwordMaxLength, {
+      message: "Password must be less than 50 characters",
+    }),
   retypedPassword: z.string(),
   email: z.string().email({ message: "Email address is invalid" }),
 });
@@ -217,7 +226,7 @@ export default function SignUp() {
                       <span className="text-destructive"> *</span>
                     </FormLabel>
                     <FormControl>
-                      <Input autoComplete="username" {...field} required />
+                      <Input autoComplete="username" required {...field} />
                     </FormControl>
                     <FormDescription>
                       Your username will serve as your social media handle.
@@ -250,6 +259,7 @@ export default function SignUp() {
                           autoComplete="new-password"
                           placeholder="Password"
                           type={isPasswordVisible ? "text" : "password"}
+                          onPaste={(e) => e.preventDefault()}
                           aria-invalid={strengthScore < 4}
                           aria-describedby="password-strength"
                           {...field}
@@ -319,6 +329,7 @@ export default function SignUp() {
                           }
                           placeholder="Password"
                           type={isRetypedPasswordVisible ? "text" : "password"}
+                          onPaste={(e) => e.preventDefault()}
                           autoComplete="repeat-password"
                           {...field}
                         />
@@ -427,7 +438,9 @@ export default function SignUp() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <hr className="w-full" />
-          <p className="text-center text-sm">or continue with</p>
+          <p className="text-center text-sm text-muted-foreground">
+            or continue with
+          </p>
           <div className="flex w-full justify-center space-x-4">
             <Button variant="outline" className="w-full">
               <DiscordLogoIcon className="mr-2 h-4 w-4" />

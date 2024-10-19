@@ -183,7 +183,9 @@ export default function SignIn() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <hr className="w-full" />
-          <p className="text-center text-sm">or continue with</p>
+          <p className="text-center text-sm text-muted-foreground">
+            or continue with
+          </p>
           <div className="flex w-full justify-center space-x-4">
             <Button variant="outline" className="w-full">
               <DiscordLogoIcon className="mr-2 h-4 w-4" />

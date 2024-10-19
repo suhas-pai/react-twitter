@@ -1,5 +1,5 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import NavBar from "~/components/navbar";
+import NavBar from "@/components/navbar";
 
 export const Route = createRootRouteWithContext<{}>()({
   component: () => (

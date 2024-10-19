@@ -8,11 +8,12 @@ import {
   User,
 } from "lucide-react";
 
-import { Button } from "~/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
+import { Input } from "@/components/ui/input";
+
 import ProfileButton from "./profile-dropdown";
 import CreatePost from "./create-post";
-import { Link } from "@tanstack/react-router";
-import { Input } from "./ui/input";
 
 export default function NavBar() {
   return (

@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { trpc } from "~/client/trpc";
 
 import PostComponent from "./post";
-import { trpc } from "~/client/trpc";
 import { FeedType } from "./post-feed-tab";
 import PostFeedTabs from "./post-feed-tab";
 

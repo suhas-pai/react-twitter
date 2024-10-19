@@ -1,11 +1,12 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share, Trash } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+
 import { Post } from "~/lib/post";
 import { trpc } from "~/client/trpc";
-import { Link } from "@tanstack/react-router";
 
 export default function PostComponent({ post }: { post: Post }) {
   const toggleLike = trpc.post.togglePostLike.useMutation({
@@ -21,9 +22,7 @@ export default function PostComponent({ post }: { post: Post }) {
 
   const utils = trpc.useUtils();
   const deletePost = trpc.post.delete.useMutation({
-    onSuccess: async () => {
-      await utils.post.invalidate();
-    },
+    onSuccess: async () => await utils.post.invalidate(),
   });
 
   return (

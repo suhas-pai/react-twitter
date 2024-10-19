@@ -4,6 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { defineEventHandler, toWebRequest } from "vinxi/http";
 import { getBaseUrl } from "~/client/trpc";
 import { account, session, users, verification } from "../db/drizzle/schema";
+import { authSchema } from "~/lib/auth/schema";
 
 export const auth: any = betterAuth({
   basePath: "/api/betterauth",
@@ -20,8 +21,8 @@ export const auth: any = betterAuth({
   emailAndPassword: {
     enabled: true,
 
-    minPasswordLength: 6,
-    maxPasswordLength: 50,
+    minPasswordLength: authSchema.passwordMinLength,
+    maxPasswordLength: authSchema.passwordMaxLength,
 
     sendEmailVerificationOnSignUp: true,
     sendResetPasswordEmail: true,

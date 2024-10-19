@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import PostFeed from "~/components/post-feed";
-import PostFeedTabs, { FeedType } from "~/components/post-feed-tab";
+
+import PostFeed from "@/components/post-feed";
+import PostFeedTabs, { FeedType } from "@/components/post-feed-tab";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,11 +10,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 
-import { Textarea } from "~/components/ui/textarea";
-import { Label } from "~/components/ui/label";
-import { Button } from "~/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { trpc } from "~/client/trpc";
 
 export default function CreatePost({
