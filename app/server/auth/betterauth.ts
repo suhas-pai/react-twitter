@@ -6,6 +6,7 @@ import { getBaseUrl } from "~/client/trpc";
 import { account, session, users, verification } from "../db/drizzle/schema";
 import { authSchema } from "~/lib/auth/schema";
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const auth: any = betterAuth({
   basePath: "/api/betterauth",
   baseURL: getBaseUrl(),

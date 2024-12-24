@@ -1,8 +1,8 @@
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
-import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "~/server/trpc/root";
 import { createTRPCReact } from "@trpc/react-query";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createQueryClient } from "~/trpc/query-client";
 import { useState } from "react";
 import superjson from "superjson";
@@ -42,6 +42,7 @@ const getQueryClient = () => {
     return createQueryClient();
   }
   // Browser: use singleton pattern to keep the same query client
+  // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
   return (clientQueryClientSingleton ??= createQueryClient());
 };
 

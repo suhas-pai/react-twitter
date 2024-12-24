@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["media"],
@@ -49,7 +48,9 @@ export default {
         },
       },
       borderRadius: {
+        // biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
         lg: `var(--radius)`,
+        // biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
         md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
       },

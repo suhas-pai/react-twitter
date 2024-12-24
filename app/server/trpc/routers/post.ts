@@ -1,4 +1,4 @@
-import { Post } from "~/lib/post";
+import type { Post } from "~/lib/post";
 import { z } from "zod";
 
 import { timedProcedure } from "~/server/trpc/api";
@@ -43,7 +43,7 @@ export const postRouter = createTRPCRouter({
       );
 
     // FIXME: Move this to the db
-    let postList: Post[] = [];
+    const postList: Post[] = [];
     for (const post of list) {
       const isLikedQuery = await ctx.db
         .select({ count: count() })
@@ -53,6 +53,7 @@ export const postRouter = createTRPCRouter({
       const isLiked = isLikedQuery[0]?.count ?? 0;
       postList.push({
         ...post,
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
         user: userList.find((user) => user.id === post.userId)!,
         comments: commentCount[0]?.count ?? 0,
         isLiked: isLiked > 0,

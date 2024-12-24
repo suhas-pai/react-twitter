@@ -1,16 +1,17 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share, Trash } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
-import { Post } from "~/lib/post";
-import { trpc } from "~/client/trpc";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { trpc } from "@/client/trpc";
+
+import type { Post } from "@/lib/post";
 
 export default function PostComponent({ post }: { post: Post }) {
   const toggleLike = trpc.post.togglePostLike.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       post.isLiked = !post.isLiked;
       if (post.isLiked) {
         post.likes++;
@@ -59,7 +60,7 @@ export default function PostComponent({ post }: { post: Post }) {
               </Link>
               <span>·</span>
               <span className={`${deletePost.isPending ? "opacity-70" : ""}`}>
-                {"Just Now"}
+                Just Now
               </span>
             </span>
           </div>
@@ -69,9 +70,11 @@ export default function PostComponent({ post }: { post: Post }) {
             </span>
             {post.images.slice(0, 4).map((image, index) => (
               <img
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
                 src={image}
-                alt={`Post image ${index + 1}`}
+                // biome-ignore lint/a11y/noRedundantAlt: <explanation>
+                alt={`Post attached image ${index + 1}`}
                 className="h-48 w-full rounded-md object-cover"
               />
             ))}

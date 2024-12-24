@@ -7,16 +7,10 @@ import {
 import { createAuthClient } from "better-auth/react";
 import { getBaseUrl } from "~/client/trpc";
 
-export const betterAuthClient = createAuthClient({
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const betterAuthClient: any = createAuthClient({
   baseURL: `${getBaseUrl()}/api/betterauth`,
-  plugins: [
-    twoFactorClient({
-      redirect: true,
-      twoFactorPage: "/two-factor",
-    }),
-    passkeyClient(),
-    adminClient(),
-  ],
+  plugins: [twoFactorClient(), passkeyClient(), adminClient()],
   fetchOptions: {
     onError(e) {
       if (e.error.status === 429) {

@@ -15,7 +15,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { trpc } from "~/client/trpc";
+import { trpc } from "@/client/trpc";
+import { postSchema } from "@/lib/post";
 
 export default function CreatePost({
   children,
@@ -27,13 +28,13 @@ export default function CreatePost({
 
   const utils = trpc.useUtils();
   const createPost = trpc.post.create.useMutation({
-    onSuccess: () => {
+    onSuccess() {
       setOpen(false);
       setContent("");
 
       utils.post.invalidate();
     },
-    onError: (error) => {
+    onError(error: { message: string }) {
       console.log(`ERROR: ${error.message}`);
     },
   });
@@ -64,7 +65,9 @@ export default function CreatePost({
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <Button
             disabled={
-              content.length < 2 || content.length > 280 || createPost.isPending
+              content.length < postSchema.contentMinLength ||
+              content.length > postSchema.contentMaxLength ||
+              createPost.isPending
             }
             onClick={() => createPost.mutate({ content })}
           >

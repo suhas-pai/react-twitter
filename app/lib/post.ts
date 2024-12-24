@@ -1,4 +1,4 @@
-import { User } from "./user";
+import type { User } from "./user";
 
 export type Post = {
   id: number;
@@ -9,4 +9,9 @@ export type Post = {
   shares: number;
   images: string[];
   isLiked: boolean;
+};
+
+export const postSchema = {
+  contentMinLength: 3,
+  contentMaxLength: 280,
 };

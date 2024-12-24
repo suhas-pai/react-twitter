@@ -1,3 +1,12 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import { Link } from "@tanstack/react-router";
+
+import { AtSign, Check, Eye, EyeOff, X } from "lucide-react";
+import { useMemo, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -20,22 +29,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Link } from "@tanstack/react-router";
-
-import { AtSign, Check, Eye, EyeOff, X } from "lucide-react";
-import { useMemo, useState } from "react";
-import { authSchema } from "~/lib/auth/schema";
+import { authSchema } from "@/lib/auth/schema";
 
 function handleSubmit() {
   // TODO
 }
 
 const formSchema = z.object({
-  displayName: z.string().max(50, { message: "Display name is too long" }),
+  displayName: z
+    .string()
+    .min(authSchema.displayNameMinLength, {
+      message: "Display name is too short",
+    })
+    .max(authSchema.displayNameMaxLength, {
+      message: "Display name is too long",
+    }),
   username: z
     .string()
     .min(authSchema.usernameMinLength, {
@@ -72,11 +80,12 @@ const getStrengthText = (score: number) => {
 
   return "Strong password";
 };
+
 const checkStrength = (pass: string) => {
   const requirements = [
     {
       regex: /.{6,}/,
-      text: `At least ${formSchema.shape.password.minLength} characters`,
+      text: `At least ${authSchema.passwordMinLength} characters`,
     },
     { regex: /[0-9]/, text: "At least 1 number" },
     { regex: /[a-z]/, text: "At least 1 lowercase letter" },
@@ -106,11 +115,12 @@ function PasswordSecurityInfo({
         aria-valuemin={0}
         aria-valuemax={4}
         aria-label="Password strength"
+        tabIndex={0}
       >
         <div
           className={`h-full ${getStrengthColor(strengthScore)} transition-all duration-500 ease-out`}
           style={{ width: `${(strengthScore / 4) * 100}%` }}
-        ></div>
+        />
       </div>
 
       {/* Password strength description */}
@@ -124,6 +134,7 @@ function PasswordSecurityInfo({
       {/* Password requirements list */}
       <ul className="space-y-1.5" aria-label="Password requirements">
         {strength.map((req, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           <li key={index} className="flex items-center space-x-2">
             {req.met ? (
               <Check
@@ -249,10 +260,7 @@ export default function SignUp() {
                         <Input
                           id="password"
                           className={
-                            (password !== retypedPassword ||
-                              strengthScore < 4) &&
-                            password !== "" &&
-                            retypedPassword !== ""
+                            strengthScore < 4
                               ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
                               : ""
                           }
@@ -267,9 +275,7 @@ export default function SignUp() {
                         <button
                           className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                           type="button"
-                          onClick={() =>
-                            setIsPasswordVisible(!isPasswordVisible)
-                          }
+                          onClick={() => setIsPasswordVisible((old) => !old)}
                           aria-label={
                             isPasswordVisible
                               ? "Hide password"
@@ -338,7 +344,7 @@ export default function SignUp() {
                         className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 ring-offset-background transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
                         onClick={() =>
-                          setIsRetypedPasswordVisible(!isRetypedPasswordVisible)
+                          setIsRetypedPasswordVisible((old) => !old)
                         }
                         aria-label={
                           isRetypedPasswordVisible

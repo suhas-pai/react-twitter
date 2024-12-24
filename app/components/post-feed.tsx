@@ -4,8 +4,7 @@ import { Suspense, useState } from "react";
 import { trpc } from "~/client/trpc";
 
 import PostComponent from "./post";
-import { FeedType } from "./post-feed-tab";
-import PostFeedTabs from "./post-feed-tab";
+import PostFeedTabs, { FeedType } from "./post-feed-tab";
 
 function PostList() {
   const [postList] = trpc.post.list.useSuspenseQuery();

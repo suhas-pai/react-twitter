@@ -1,5 +1,8 @@
 export const authSchema = {
-  usernameMinLength: 2,
+  displayNameMinLength: 0,
+  displayNameMaxLength: 50,
+
+  usernameMinLength: 3,
   usernameMaxLength: 50,
 
   passwordMinLength: 6,

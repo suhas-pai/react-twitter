@@ -36,9 +36,11 @@ export const images = createTable(
       () => new Date()
     ),
   },
-  (example) => ({
-    nameIndex: index("image_idx").on(example.name),
-  })
+  (example) => [
+    {
+      nameIndex: index("image_idx").on(example.name),
+    },
+  ]
 );
 
 export const users = createTable(
@@ -65,9 +67,11 @@ export const users = createTable(
       .notNull()
       .default(sql`''`),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+  (example) => [
+    {
+      nameIndex: index("name_idx").on(example.name),
+    },
+  ]
 );
 
 export const session = createTable("session", {
@@ -122,13 +126,15 @@ export const posts = createTable(
       () => new Date()
     ),
   },
-  (post) => ({
-    nameIndex: index("text_idx").on(post.content),
-    selfRef: foreignKey({
-      columns: [post.parentId],
-      foreignColumns: [post.id],
-    }),
-  })
+  (post) => [
+    {
+      nameIndex: index("text_idx").on(post.content),
+      selfRef: foreignKey({
+        columns: [post.parentId],
+        foreignColumns: [post.id],
+      }),
+    },
+  ]
 );
 
 // FIXME: Add a limit on number of likes stored per user
@@ -144,8 +150,10 @@ export const userLikes = createTable(
       onDelete: "cascade",
     }),
   },
-  (like) => ({
-    nameIndex: index("like_idx").on(like.userId, like.postId),
-    id: primaryKey({ columns: [like.userId, like.postId] }),
-  })
+  (like) => [
+    {
+      nameIndex: index("like_idx").on(like.userId, like.postId),
+      id: primaryKey({ columns: [like.userId, like.postId] }),
+    },
+  ]
 );

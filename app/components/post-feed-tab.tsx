@@ -11,7 +11,7 @@ function Tab({
   disabled,
 }: {
   feedType: FeedType;
-  setFeedType: (type: FeedType) => void;
+  setFeedType: (feedType: FeedType) => void;
   selected: boolean;
   isRight: boolean;
   disabled: boolean;
@@ -20,10 +20,11 @@ function Tab({
     <div
       className={`relative flex flex-1 cursor-pointer justify-center ${isRight ? "border-r" : "border-l"} p-3 text-sm transition duration-300 bg-primary-foreground hover:bg-secondary ${selected ? "font-semibold" : "text-secondary-foreground"} ${disabled ? "opacity-50" : ""}`}
       onClick={() => !disabled && setFeedType(feedType)}
+      onKeyDown={() => !disabled && setFeedType(feedType)}
     >
       {feedType}
       {selected && (
-        <div className="absolute bottom-0 h-1 w-10 rounded-full bg-primary"></div>
+        <div className="absolute bottom-0 h-1 w-10 rounded-full bg-primary" />
       )}
     </div>
   );

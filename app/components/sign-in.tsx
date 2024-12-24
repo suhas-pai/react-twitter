@@ -29,7 +29,8 @@ import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AtSign, Eye, EyeOff } from "lucide-react";
 
-import { betterAuthClient } from "~/client/auth/betterauth";
+import { betterAuthClient } from "@/client/auth/betterauth";
+import { authSchema } from "@/lib/auth/schema";
 
 async function handleSubmit(values: z.infer<typeof formSchema>) {
   const { email, password } = values;
@@ -37,6 +38,7 @@ async function handleSubmit(values: z.infer<typeof formSchema>) {
     email,
     password,
     fetchOptions: {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       onSuccess(ctx: any) {
         console.log(ctx);
       },
@@ -48,8 +50,12 @@ const formSchema = z.object({
   email: z.string().email({ message: "Email address is invalid" }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" })
-    .max(50, { message: "Password must be less than 50 characters" }),
+    .min(authSchema.passwordMinLength, {
+      message: "Password must be at least 6 characters",
+    })
+    .max(authSchema.passwordMaxLength, {
+      message: "Password must be less than 50 characters",
+    }),
 });
 
 export default function SignIn() {
@@ -141,9 +147,7 @@ export default function SignIn() {
                         <button
                           className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                           type="button"
-                          onClick={() =>
-                            setIsPasswordVisible(!isPasswordVisible)
-                          }
+                          onClick={() => setIsPasswordVisible((old) => !old)}
                           aria-label={
                             isPasswordVisible
                               ? "Hide password"
