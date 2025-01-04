@@ -2,7 +2,7 @@
 
 A remake of X (formerly Twitter) with the technologies listed below
 
-- [ReactTS](react.dev) as framework
+- [ReactTS](https://react.dev) as framework
 - [TanStack Router](https://tanstack.com/router/latest) for Routing
 - [Vinxi](https://vinxi.vercel.app/) + [Nitro](https://nitro.build/) for backend
 - [TRPC](https://trpc.io/) as middleware

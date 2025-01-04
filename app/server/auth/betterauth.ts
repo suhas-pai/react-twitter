@@ -1,10 +1,16 @@
 import { betterAuth } from "better-auth";
-import { db } from "~/server/db/drizzle";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+
 import { defineEventHandler, toWebRequest } from "vinxi/http";
+
 import { getBaseUrl } from "~/client/trpc";
+import { db } from "~/server/db/drizzle";
+
 import { account, session, users, verification } from "../db/drizzle/schema";
 import { authSchema } from "~/lib/auth/schema";
+
+import { twoFactor } from "better-auth/plugins";
+import { magicLink } from "better-auth/plugins/magic-link";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const auth: any = betterAuth({
@@ -31,6 +37,14 @@ export const auth: any = betterAuth({
     sendResetPassword: async () => {},
     sendVerificationEmail: async () => {},
   },
+  plugins: [
+    twoFactor(),
+    magicLink({
+      sendMagicLink: async () => {
+        // TODO: Implement email server
+      },
+    }),
+  ],
   secret: process.env.BETTERAUTH_SECRET,
 });
 

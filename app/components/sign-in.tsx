@@ -23,11 +23,10 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Link } from "@tanstack/react-router";
 
 import { useMemo, useState } from "react";
-import { AtSign, Eye, EyeOff } from "lucide-react";
+import { AtSign, Eye, EyeOff, Mail } from "lucide-react";
 
 import { betterAuthClient } from "@/client/auth/betterauth";
 import { authSchema } from "@/lib/auth/schema";
@@ -58,7 +57,7 @@ const formSchema = z.object({
     }),
 });
 
-export default function SignIn() {
+export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,6 +72,12 @@ export default function SignIn() {
     () => z.string().email().safeParse(email).success,
     [email]
   );
+
+  const sendMagicLink = async () => {
+    await betterAuthClient.signIn.magicLink({
+      email,
+    });
+  };
 
   return (
     <div className="flex items-center justify-center">
@@ -191,13 +196,14 @@ export default function SignIn() {
             or continue with
           </p>
           <div className="flex w-full justify-center space-x-4">
-            <Button variant="outline" className="w-full">
-              <DiscordLogoIcon className="mr-2 h-4 w-4" />
-              <span>Discord</span>
-            </Button>
-            <Button variant="outline" className="w-full">
-              <GitHubLogoIcon className="mr-2 h-4 w-4" />
-              <span>GitHub</span>
+            <Button
+              variant="outline"
+              className="w-full"
+              disabled={!emailIsValid}
+              onClick={() => sendMagicLink()}
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              <span>Email</span>
             </Button>
           </div>
           <Button variant="link">
