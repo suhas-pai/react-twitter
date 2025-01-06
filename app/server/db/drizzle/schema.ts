@@ -47,7 +47,7 @@ export const users = createTable(
   "users",
   {
     id: text().primaryKey(),
-    name: varchar("name", { length: 256 }).notNull(),
+    handle: varchar("name", { length: 256 }).notNull(),
     displayName: varchar("display_name", { length: 256 }).notNull(),
     email: text("email").notNull().unique(),
     emailVerified: boolean("emailVerified").notNull(),
@@ -69,7 +69,7 @@ export const users = createTable(
   },
   (example) => [
     {
-      nameIndex: index("name_idx").on(example.name),
+      nameIndex: index("name_idx").on(example.handle),
     },
   ]
 );

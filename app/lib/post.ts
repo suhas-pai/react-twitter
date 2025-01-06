@@ -5,10 +5,12 @@ export type Post = {
   user: User;
   content: string;
   likes: number;
-  comments: number;
-  shares: number;
+  views: number;
+  replies: number;
+  reposts: number;
   images: string[];
   isLiked: boolean;
+  createdAt: Date;
 };
 
 export const postSchema = {

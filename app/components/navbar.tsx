@@ -33,13 +33,13 @@ export default function NavBar() {
                 Notifications
               </Button>
             </Link>
-            <Link href="/messages">
+            <Link to="/messages">
               <Button variant="ghost">
                 <MailIcon className="mr-2 h-4 w-4" />
                 Messages
               </Button>
             </Link>
-            <Link href="/profile">
+            <Link to="/profile">
               <Button variant="ghost">
                 <User className="mr-2 h-4 w-4" />
                 Profile

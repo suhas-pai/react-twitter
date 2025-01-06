@@ -55,8 +55,10 @@ export const postRouter = createTRPCRouter({
         ...post,
         // biome-ignore lint/style/noNonNullAssertion: <explanation>
         user: userList.find((user) => user.id === post.userId)!,
-        comments: commentCount[0]?.count ?? 0,
+        replies: commentCount[0]?.count ?? 0,
         isLiked: isLiked > 0,
+        views: 0, //FIXME:
+        reposts: 0, //FIXME:
       });
     }
 
@@ -72,13 +74,13 @@ export const postRouter = createTRPCRouter({
   }),
 
   togglePostLike: timedProcedure
-    .input(z.object({ postId: z.number() }))
+    .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const hasLike = await ctx.db.query.userLikes.findFirst({
         // FIXME:
         where: and(
           eq(userLikes.userId, "1"),
-          eq(userLikes.postId, input.postId)
+          eq(userLikes.postId, input.id)
         ),
       });
 
@@ -86,7 +88,7 @@ export const postRouter = createTRPCRouter({
         const result = await ctx.db
           .update(posts)
           .set({ likes: sql`${posts.likes} - 1` })
-          .where(eq(posts.id, input.postId));
+          .where(eq(posts.id, input.id));
 
         if (!result) {
           throw new Error("Post not found to like");
@@ -94,7 +96,7 @@ export const postRouter = createTRPCRouter({
 
         const result2 = await ctx.db.delete(userLikes).where(
           // FIXME:
-          and(eq(userLikes.userId, "1"), eq(userLikes.postId, input.postId))
+          and(eq(userLikes.userId, "1"), eq(userLikes.postId, input.id))
         );
 
         if (!result2) {
@@ -104,14 +106,14 @@ export const postRouter = createTRPCRouter({
         const result = await ctx.db
           .update(posts)
           .set({ likes: sql`${posts.likes} + 1` })
-          .where(eq(posts.id, input.postId));
+          .where(eq(posts.id, input.id));
 
         if (!result) {
           throw new Error("Post not found to unlike");
         }
 
         const result2 = await ctx.db.insert(userLikes).values({
-          postId: input.postId,
+          postId: input.id,
           userId: "1", // FIXME:
         });
 
@@ -122,11 +124,11 @@ export const postRouter = createTRPCRouter({
     }),
 
   delete: timedProcedure
-    .input(z.object({ postId: z.number() }))
+    .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.db
         .delete(posts)
-        .where(eq(posts.id, input.postId));
+        .where(eq(posts.id, input.id));
 
       if (!result) {
         throw new Error("Post not found to delete");

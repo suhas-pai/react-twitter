@@ -1,6 +1,6 @@
 export type User = {
   id: string;
-  name: string;
+  handle: string;
   displayName: string;
   iconUrl: string;
   bio: string;

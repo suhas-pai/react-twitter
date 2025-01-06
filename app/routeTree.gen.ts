@@ -17,9 +17,13 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const SignupLazyImport = createFileRoute('/signup')()
+const SettingsLazyImport = createFileRoute('/settings')()
+const ProfileLazyImport = createFileRoute('/profile')()
 const NotificationsLazyImport = createFileRoute('/notifications')()
 const MessagesLazyImport = createFileRoute('/messages')()
 const LoginLazyImport = createFileRoute('/login')()
+const ExploreLazyImport = createFileRoute('/explore')()
+const BookmarksLazyImport = createFileRoute('/bookmarks')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
@@ -29,6 +33,18 @@ const SignupLazyRoute = SignupLazyImport.update({
   path: '/signup',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
+
+const SettingsLazyRoute = SettingsLazyImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
+
+const ProfileLazyRoute = ProfileLazyImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/profile.lazy').then((d) => d.Route))
 
 const NotificationsLazyRoute = NotificationsLazyImport.update({
   id: '/notifications',
@@ -48,6 +64,18 @@ const LoginLazyRoute = LoginLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
+const ExploreLazyRoute = ExploreLazyImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/explore.lazy').then((d) => d.Route))
+
+const BookmarksLazyRoute = BookmarksLazyImport.update({
+  id: '/bookmarks',
+  path: '/bookmarks',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/bookmarks.lazy').then((d) => d.Route))
+
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
@@ -63,6 +91,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/bookmarks': {
+      id: '/bookmarks'
+      path: '/bookmarks'
+      fullPath: '/bookmarks'
+      preLoaderRoute: typeof BookmarksLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreLazyImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -86,6 +128,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsLazyImport
       parentRoute: typeof rootRoute
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -100,51 +156,99 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/bookmarks': typeof BookmarksLazyRoute
+  '/explore': typeof ExploreLazyRoute
   '/login': typeof LoginLazyRoute
   '/messages': typeof MessagesLazyRoute
   '/notifications': typeof NotificationsLazyRoute
+  '/profile': typeof ProfileLazyRoute
+  '/settings': typeof SettingsLazyRoute
   '/signup': typeof SignupLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/bookmarks': typeof BookmarksLazyRoute
+  '/explore': typeof ExploreLazyRoute
   '/login': typeof LoginLazyRoute
   '/messages': typeof MessagesLazyRoute
   '/notifications': typeof NotificationsLazyRoute
+  '/profile': typeof ProfileLazyRoute
+  '/settings': typeof SettingsLazyRoute
   '/signup': typeof SignupLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/bookmarks': typeof BookmarksLazyRoute
+  '/explore': typeof ExploreLazyRoute
   '/login': typeof LoginLazyRoute
   '/messages': typeof MessagesLazyRoute
   '/notifications': typeof NotificationsLazyRoute
+  '/profile': typeof ProfileLazyRoute
+  '/settings': typeof SettingsLazyRoute
   '/signup': typeof SignupLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/messages' | '/notifications' | '/signup'
+  fullPaths:
+    | '/'
+    | '/bookmarks'
+    | '/explore'
+    | '/login'
+    | '/messages'
+    | '/notifications'
+    | '/profile'
+    | '/settings'
+    | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/messages' | '/notifications' | '/signup'
-  id: '__root__' | '/' | '/login' | '/messages' | '/notifications' | '/signup'
+  to:
+    | '/'
+    | '/bookmarks'
+    | '/explore'
+    | '/login'
+    | '/messages'
+    | '/notifications'
+    | '/profile'
+    | '/settings'
+    | '/signup'
+  id:
+    | '__root__'
+    | '/'
+    | '/bookmarks'
+    | '/explore'
+    | '/login'
+    | '/messages'
+    | '/notifications'
+    | '/profile'
+    | '/settings'
+    | '/signup'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  BookmarksLazyRoute: typeof BookmarksLazyRoute
+  ExploreLazyRoute: typeof ExploreLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
   MessagesLazyRoute: typeof MessagesLazyRoute
   NotificationsLazyRoute: typeof NotificationsLazyRoute
+  ProfileLazyRoute: typeof ProfileLazyRoute
+  SettingsLazyRoute: typeof SettingsLazyRoute
   SignupLazyRoute: typeof SignupLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  BookmarksLazyRoute: BookmarksLazyRoute,
+  ExploreLazyRoute: ExploreLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
   MessagesLazyRoute: MessagesLazyRoute,
   NotificationsLazyRoute: NotificationsLazyRoute,
+  ProfileLazyRoute: ProfileLazyRoute,
+  SettingsLazyRoute: SettingsLazyRoute,
   SignupLazyRoute: SignupLazyRoute,
 }
 
@@ -159,14 +263,24 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/bookmarks",
+        "/explore",
         "/login",
         "/messages",
         "/notifications",
+        "/profile",
+        "/settings",
         "/signup"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/bookmarks": {
+      "filePath": "bookmarks.lazy.tsx"
+    },
+    "/explore": {
+      "filePath": "explore.lazy.tsx"
     },
     "/login": {
       "filePath": "login.lazy.tsx"
@@ -176,6 +290,12 @@ export const routeTree = rootRoute
     },
     "/notifications": {
       "filePath": "notifications.lazy.tsx"
+    },
+    "/profile": {
+      "filePath": "profile.lazy.tsx"
+    },
+    "/settings": {
+      "filePath": "settings.lazy.tsx"
     },
     "/signup": {
       "filePath": "signup.lazy.tsx"

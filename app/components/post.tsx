@@ -1,13 +1,29 @@
 "use client";
 
-import { Heart, MessageCircle, Share, Trash } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import {
+  Bookmark,
+  Eye,
+  Heart,
+  MessageCircle,
+  MoreHorizontal,
+  Repeat2,
+  Share,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/client/trpc";
 
 import type { Post } from "@/lib/post";
+
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export default function PostComponent({ post }: { post: Post }) {
   const toggleLike = trpc.post.togglePostLike.useMutation({
@@ -26,108 +42,108 @@ export default function PostComponent({ post }: { post: Post }) {
     onSuccess: async () => await utils.post.invalidate(),
   });
 
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  //const isOwnPost = post.user.id === user.id;
+  const isOwnPost = false;
+
   return (
-    <div className="flex min-h-28 w-full min-w-48 flex-col justify-around border px-3 py-3">
-      <div className="mb-3 flex h-full items-start">
-        <div className="avatar">
-          <Link
-            href={`/profile/${post.user.name}`}
-            className="w-8 overflow-hidden rounded-full"
-          >
-            <Avatar className="mr-2">
-              <AvatarImage
-                src={post.user.iconUrl}
-                alt={`${post.user.name} icon`}
-              />
-              <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-          </Link>
-        </div>
-        <div className="flex w-full flex-col items-start">
-          <div className="flex items-center gap-1">
-            <Link
-              href={`/profile/${post.user.name}`}
-              className={`font-semibold ${deletePost.isPending ? "opacity-70" : ""}`}
-            >
-              {post.user.displayName}
-            </Link>
-            <span className="flex gap-1 text-sm">
-              <Link
-                href={`/profile/${post.user.name}`}
-                className={`${deletePost.isPending ? "opacity-70" : ""}`}
-              >
-                @{post.user.name}
-              </Link>
-              <span>·</span>
-              <span className={`${deletePost.isPending ? "opacity-70" : ""}`}>
-                Just Now
+    <div className="p-4 border-b hover:bg-muted/50 transition-colors">
+      <div className="flex gap-4">
+        <Avatar>
+          <AvatarImage src={`/placeholder.svg?height=40&width=40`} />
+          <AvatarFallback>{post.user.displayName[0]}</AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="font-bold">{post.user.displayName}</span>
+              <span className="text-muted-foreground">@{post.user.handle}</span>
+              <span className="text-muted-foreground">·</span>
+              <span className="text-muted-foreground">
+                {post.createdAt.toLocaleDateString()}
               </span>
-            </span>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {isOwnPost ? (
+                  <>
+                    <DropdownMenuItem>Pin to your profile</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => deletePost.mutate({ id: post.id })}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem>
+                      Not interested in this post
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Follow @{post.user.handle}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Add/remove @{post.user.handle} from Lists
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Mute @{post.user.handle}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Block @{post.user.handle}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Report post</DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <div className="mt-1 flex w-full min-w-fit flex-col gap-3">
-            <span className={`${deletePost.isPending ? "opacity-70" : ""}`}>
-              {post.content}
-            </span>
-            {post.images.slice(0, 4).map((image, index) => (
-              <img
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                key={index}
-                src={image}
-                // biome-ignore lint/a11y/noRedundantAlt: <explanation>
-                alt={`Post attached image ${index + 1}`}
-                className="h-48 w-full rounded-md object-cover"
-              />
-            ))}
-          </div>
-        </div>
-        <div className="w-full px-2">
-          <span className="flex justify-end">
+          <p className="mt-1">{post.content}</p>
+          <div className="flex justify-between mt-4 items-center text-muted-foreground">
+            <Button variant="ghost" size="sm" className="hover:text-blue-500">
+              <MessageCircle className="w-4 h-4 mr-2" />
+              <span>{post.replies}</span>
+            </Button>
+            <Button variant="ghost" size="sm" className="hover:text-green-500">
+              <Repeat2 className="w-4 h-4 mr-2" />
+              <span>{post.reposts}</span>
+            </Button>
             <Button
               variant="ghost"
-              className="cursor-pointer hover:text-red-500 disabled:opacity-70"
               size="sm"
-              onClick={() => deletePost.mutate({ postId: post.id })}
-              disabled={deletePost.isPending}
+              className="hover:text-red-500"
+              onClick={() => toggleLike.mutate({ id: post.id })}
             >
-              <Trash size={16} />
+              <Heart className="w-4 h-4 mr-2" />
+              <span>{post.likes}</span>
             </Button>
-          </span>
+            <Button variant="ghost" size="sm" className="hover:text-blue-500">
+              <Eye className="w-4 h-4 mr-2" />
+              <span>{post.views}</span>
+            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsBookmarked(!isBookmarked)}
+              >
+                <Bookmark
+                  className={`w-4 h-4 ${isBookmarked ? "fill-current text-blue-500" : ""}`}
+                />
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Share className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="h-100 flex justify-between">
-        <Button
-          className="cursor-pointer"
-          variant="ghost"
-          size="sm"
-          onClick={() => toggleLike.mutate({ postId: post.id })}
-          disabled={
-            toggleLike.isPending || deletePost.isPending || deletePost.isSuccess
-          }
-        >
-          <Heart
-            className="mr-2 h-4 w-4"
-            fill={post.isLiked ? "red" : "none"}
-          />
-          {post.likes}
-        </Button>
-        <Button
-          className="cursor-pointer"
-          variant="ghost"
-          size="sm"
-          disabled={deletePost.isPending || deletePost.isSuccess}
-        >
-          <MessageCircle className="mr-2 h-4 w-4" />
-          {post.comments}
-        </Button>
-        <Button
-          className="cursor-pointer"
-          variant="ghost"
-          size="sm"
-          disabled={deletePost.isPending || deletePost.isSuccess}
-        >
-          <Share className="mr-2 h-4 w-4" />
-          {post.shares}
-        </Button>
       </div>
     </div>
   );

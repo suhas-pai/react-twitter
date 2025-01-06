@@ -49,3 +49,6 @@ yarn-error.log*
 
 # Vinxi
 .vinxi
+
+# Tanstack Router
+app/routeTree.gen.ts
