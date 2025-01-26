@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useState } from "react";
-import { ComposePost } from "./compose-post";
+import { ComposePostUploads } from "./compose-post";
 import { trpc } from "~/client/trpc";
+import { Textarea } from "./ui/textarea";
 
 export function ComposePostDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -35,22 +36,26 @@ export function ComposePostDialog({ children }: { children: React.ReactNode }) {
         <AlertDialogHeader>
           <AlertDialogTitle>Create Post</AlertDialogTitle>
         </AlertDialogHeader>
-        <ComposePost
-          havePostButton={false}
-          content={content}
-          setContent={setContent}
+        <Textarea
+          placeholder="What's happening?"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="min-h-[100px] text-xl border-0 focus-visible:ring-0 resize-none"
         />
         <AlertDialogFooter>
-          <div className="flex justify-end gap-2">
-            <AlertDialogCancel className="cursor-pointer">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="cursor-pointer"
-              onClick={() => createPost.mutate({ content })}
-            >
-              Post
-            </AlertDialogAction>
+          <div className="flex gap-2 justify-between w-full">
+            <ComposePostUploads />
+            <div className="flex justify-end gap-2">
+              <AlertDialogCancel className="cursor-pointer">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="cursor-pointer"
+                onClick={() => createPost.mutate({ content })}
+              >
+                Post
+              </AlertDialogAction>
+            </div>
           </div>
         </AlertDialogFooter>
       </AlertDialogContent>

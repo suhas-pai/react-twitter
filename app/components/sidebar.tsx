@@ -11,6 +11,7 @@ import {
   Search,
   User,
   Settings,
+  Pen,
 } from "lucide-react";
 
 import { Link, useRouterState } from "@tanstack/react-router";
@@ -64,13 +65,14 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <div className="h-full">
+      <div className="mt-4 h-full">
         <ComposePostDialog>
           <Button
             variant="ghost"
             className="w-full justify-center md:justify-start gap-4"
           >
-            Compose Post
+            <Pen className="w-4 h-4" />
+            Create Post
           </Button>
         </ComposePostDialog>
       </div>

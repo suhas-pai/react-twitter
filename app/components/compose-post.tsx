@@ -6,12 +6,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImageIcon, Smile, MapPin, Calendar } from "lucide-react";
 import { trpc } from "~/client/trpc";
 
+export function ComposePostUploads() {
+  return (
+    <div className="flex gap-2">
+      <Button variant="ghost" size="icon" className="text-blue-500">
+        <ImageIcon className="w-5 h-5" />
+      </Button>
+      <Button variant="ghost" size="icon" className="text-blue-500">
+        <Smile className="w-5 h-5" />
+      </Button>
+      <Button variant="ghost" size="icon" className="text-blue-500">
+        <MapPin className="w-5 h-5" />
+      </Button>
+      <Button variant="ghost" size="icon" className="text-blue-500">
+        <Calendar className="w-5 h-5" />
+      </Button>
+    </div>
+  );
+}
+
 export function ComposePost({
-  havePostButton = true,
   content,
   setContent,
 }: {
-  havePostButton?: boolean;
   content: string;
   setContent: (content: string) => void;
 }) {
@@ -41,29 +58,14 @@ export function ComposePost({
             className="min-h-[100px] text-xl border-0 focus-visible:ring-0 resize-none"
           />
           <div className="flex justify-between items-center mt-4">
-            <div className="flex gap-2">
-              <Button variant="ghost" size="icon" className="text-blue-500">
-                <ImageIcon className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-blue-500">
-                <Smile className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-blue-500">
-                <MapPin className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-blue-500">
-                <Calendar className="w-5 h-5" />
-              </Button>
-            </div>
-            {havePostButton && (
-              <Button
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-2"
-                disabled={!content.trim()}
-                onClick={() => createPost.mutate({ content })}
-              >
-                Post
-              </Button>
-            )}
+            <ComposePostUploads />
+            <Button
+              className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-2"
+              disabled={!content.trim()}
+              onClick={() => createPost.mutate({ content })}
+            >
+              Post
+            </Button>
           </div>
         </div>
       </div>

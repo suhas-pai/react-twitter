@@ -2,6 +2,7 @@
 
 A remake of X (formerly Twitter) with the technologies listed below
 
+- [Bun](https://bun.sh) as bundler
 - [ReactTS](https://react.dev) as framework
 - [TanStack Router](https://tanstack.com/router/latest) for Routing
 - [Vinxi](https://vinxi.vercel.app/) + [Nitro](https://nitro.build/) for backend
@@ -25,12 +26,12 @@ using `Docker`. See comments inside the script file for more information.
 
 ## Building
 
-This project uses the `pnpm` package manager. The following commands are available for running/building this project:
+This project uses the `bun` runtime and bundler. The following commands are available for running/building this project:
 
-- `pnpm run dev` (for development)
-- `pnpm run build` (for production)
-- `pnpm run start` (for production and to run)
+- `bun run dev` (for development)
+- `bun run build` (for production)
+- `bun run start` (for production and to run)
 
-Note that at time of writing, `pnpm run start` is currently not supported due to an issue in `vinxi`
+Note that at time of writing, `bun run start` is currently not supported due to an issue in `vinxi`
 
 This project also has several commands (provided by `drizzle`) to investigate the `postgres` database linked in your `.env`. See `package.json` for more information
