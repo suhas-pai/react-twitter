@@ -1,10 +1,12 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-import PostFeedTabs, { FeedType } from "@/components/post-feed-tab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ComposePost } from "~/components/compose-post";
-import { Post } from "~/lib/post";
+import type { Post } from "~/lib/post";
 import PostComponent from "~/components/post";
+import { trpc } from "~/client/trpc";
+import { useSession } from "~/client/auth/betterauth";
+import { useState } from "react";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -24,28 +26,31 @@ export const Route = createLazyFileRoute("/")({
 });
 
 function Index() {
-  const forYouPosts: Post[] = [];
+  const [content, setContent] = useState("");
+  const [forYouPosts] = trpc.post.list.useSuspenseQuery();
   const followingPosts: Post[] = [];
+
+  const { data: session } = useSession();
+  console.log(session);
 
   return (
     <div className="max-w-2xl border-x min-h-screen">
       <div className="sticky top-0 bg-background/80 backdrop-blur-sm border-b">
         <h1 className="text-xl font-bold p-4">Home</h1>
-        <Tabs defaultValue="for-you" className="w-full">
+        <Tabs defaultValue="for-you">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="for-you">For You</TabsTrigger>
             <TabsTrigger value="following">Following</TabsTrigger>
           </TabsList>
-          <ComposePost />
-          <TabsContent value="all">
-            {forYouPosts.map((post, i) => (
-              <PostComponent key={i} post={post} />
+          <ComposePost content={content} setContent={setContent} />
+          <TabsContent className="mt-0" value="for-you">
+            {forYouPosts.map((post) => (
+              <PostComponent key={post.id} post={post} />
             ))}
           </TabsContent>
-          <TabsContent value="mentions">
-            <ComposePost />
-            {followingPosts.map((post, i) => (
-              <PostComponent key={i} post={post} />
+          <TabsContent className="mt-0" value="following">
+            {followingPosts.map((post) => (
+              <PostComponent key={post.id} post={post} />
             ))}
           </TabsContent>
         </Tabs>

@@ -1,8 +1,12 @@
+import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { Sidebar } from "~/components/sidebar";
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
-export const Route = createRootRouteWithContext<{}>()({
+export interface RouterContext {
+  queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
       <div className="grid grid-cols-[80px_1fr] md:grid-cols-[240px_1fr] min-h-screen">

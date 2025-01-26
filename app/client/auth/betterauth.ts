@@ -8,8 +8,7 @@ import {
 import { createAuthClient } from "better-auth/react";
 import { getBaseUrl } from "~/client/trpc";
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const betterAuthClient: any = createAuthClient({
+const betterAuthClient = createAuthClient({
   baseURL: `${getBaseUrl()}/api/betterauth`,
   plugins: [
     twoFactorClient(),
@@ -25,3 +24,5 @@ export const betterAuthClient: any = createAuthClient({
     },
   },
 });
+
+export const { signIn, signOut, signUp, useSession } = betterAuthClient;

@@ -2,6 +2,7 @@ import { createApp } from "vinxi";
 
 import reactRefresh from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
 
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
@@ -41,6 +42,7 @@ export default createApp({
       handler: "./index.html",
       target: "browser",
       plugins: () => [
+        tailwindcss(),
         TanStackRouterVite({
           routesDirectory: "./app/routes",
           generatedRouteTree: "./app/routeTree.gen.ts",

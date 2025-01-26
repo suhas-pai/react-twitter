@@ -17,7 +17,9 @@ function RouteComponent() {
         <h1 className="text-xl font-bold">Bookmarks</h1>
       </div>
       {bookmarkedPosts.length > 0 ? (
-        bookmarkedPosts.map((post, i) => <PostComponent key={i} post={post} />)
+        bookmarkedPosts.map((post) => (
+          <PostComponent key={post.id} post={post} />
+        ))
       ) : (
         <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] text-center p-4">
           <Bookmark className="w-16 h-16 text-[#1D9BF0] mb-4" />

@@ -3,7 +3,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
-import { Notification } from "~/lib/notification";
+import type { Notification } from "~/lib/notification";
 
 export const Route = createLazyFileRoute("/notifications")({
   component: () => {
@@ -18,8 +18,11 @@ export const Route = createLazyFileRoute("/notifications")({
               <TabsTrigger value="mentions">Mentions</TabsTrigger>
             </TabsList>
             <TabsContent value="all">
-              {notifications.map((notification, i) => (
-                <NotificationItem key={i} notification={notification} />
+              {notifications.map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
+                />
               ))}
             </TabsContent>
             <TabsContent value="mentions">
@@ -45,7 +48,7 @@ const NotificationItem = ({ notification }: { notification: Notification }) => {
     <div className="flex items-start gap-4 p-4 border-b hover:bg-muted/50 transition-colors">
       <div className="mt-1">{icons[notification.kind]}</div>
       <Avatar>
-        <AvatarImage src={`/placeholder.svg?height=40&width=40`} />
+        <AvatarImage src="/placeholder.svg?height=40&width=40" />
         <AvatarFallback>{notification.post.user.displayName[0]}</AvatarFallback>
       </Avatar>
       <div className="flex-1">

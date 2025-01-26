@@ -46,7 +46,8 @@ export default function CreatePost({
         <AlertDialogHeader>
           <AlertDialogTitle>Create Post</AlertDialogTitle>
           <AlertDialogDescription>
-            Write a post to share with the world. Limit 280 characters
+            Write a post to share with the world. Limit{" "}
+            {postSchema.contentMaxLength} characters
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="grid w-full gap-1.5">

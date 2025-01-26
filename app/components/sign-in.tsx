@@ -28,17 +28,16 @@ import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AtSign, Eye, EyeOff, Mail } from "lucide-react";
 
-import { betterAuthClient } from "@/client/auth/betterauth";
+import { signIn } from "@/client/auth/betterauth";
 import { authSchema } from "@/lib/auth/schema";
 
-async function handleSubmit(values: z.infer<typeof formSchema>) {
+async function onSubmit(values: z.infer<typeof formSchema>) {
   const { email, password } = values;
-  await betterAuthClient.signIn.email({
+  await signIn.email({
     email,
     password,
     fetchOptions: {
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      onSuccess(ctx: any) {
+      onSuccess(ctx) {
         console.log(ctx);
       },
     },
@@ -74,9 +73,7 @@ export default function Login() {
   );
 
   const sendMagicLink = async () => {
-    await betterAuthClient.signIn.magicLink({
-      email,
-    });
+    await signIn.magicLink({ email });
   };
 
   return (
@@ -91,7 +88,7 @@ export default function Login() {
         <CardContent>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(handleSubmit)}
+              onSubmit={() => form.handleSubmit(onSubmit)}
               className="space-y-6"
             >
               <FormField

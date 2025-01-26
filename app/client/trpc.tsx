@@ -42,8 +42,8 @@ const getQueryClient = () => {
     return createQueryClient();
   }
   // Browser: use singleton pattern to keep the same query client
-  // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
-  return (clientQueryClientSingleton ??= createQueryClient());
+  clientQueryClientSingleton ??= createQueryClient();
+  return clientQueryClientSingleton;
 };
 
 export const trpc = createTRPCReact<AppRouter>();

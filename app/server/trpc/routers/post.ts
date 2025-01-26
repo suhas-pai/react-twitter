@@ -78,10 +78,7 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const hasLike = await ctx.db.query.userLikes.findFirst({
         // FIXME:
-        where: and(
-          eq(userLikes.userId, "1"),
-          eq(userLikes.postId, input.id)
-        ),
+        where: and(eq(userLikes.userId, "1"), eq(userLikes.postId, input.id)),
       });
 
       if (hasLike) {
@@ -126,9 +123,7 @@ export const postRouter = createTRPCRouter({
   delete: timedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const result = await ctx.db
-        .delete(posts)
-        .where(eq(posts.id, input.id));
+      const result = await ctx.db.delete(posts).where(eq(posts.id, input.id));
 
       if (!result) {
         throw new Error("Post not found to delete");

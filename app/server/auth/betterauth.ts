@@ -12,8 +12,7 @@ import { authSchema } from "~/lib/auth/schema";
 import { twoFactor } from "better-auth/plugins";
 import { magicLink } from "better-auth/plugins/magic-link";
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const auth: any = betterAuth({
+export const auth = betterAuth({
   basePath: "/api/betterauth",
   baseURL: getBaseUrl(),
   database: drizzleAdapter(db, {

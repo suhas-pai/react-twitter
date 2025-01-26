@@ -2,7 +2,7 @@
 
 import {
   Bookmark,
-  Eye,
+  ChartNoAxesColumn,
   Heart,
   MessageCircle,
   MoreHorizontal,
@@ -49,8 +49,8 @@ export default function PostComponent({ post }: { post: Post }) {
   return (
     <div className="p-4 border-b hover:bg-muted/50 transition-colors">
       <div className="flex gap-4">
-        <Avatar>
-          <AvatarImage src={`/placeholder.svg?height=40&width=40`} />
+        <Avatar className="mt-1">
+          <AvatarImage src="/placeholder.svg?height=40&width=40" />
           <AvatarFallback>{post.user.displayName[0]}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
@@ -84,19 +84,21 @@ export default function PostComponent({ post }: { post: Post }) {
                 ) : (
                   <>
                     <DropdownMenuItem>
-                      Not interested in this post
+                      <button type="button">Not interested in this post</button>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Follow @{post.user.handle}
+                      <button type="button">Follow @{post.user.handle}</button>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Add/remove @{post.user.handle} from Lists
+                      <button type="button">
+                        Add/remove @{post.user.handle} from Lists
+                      </button>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Mute @{post.user.handle}
+                      <button type="button">Mute @{post.user.handle}</button>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Block @{post.user.handle}
+                      <button type="button">Block @{post.user.handle}</button>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Report post</DropdownMenuItem>
@@ -107,13 +109,17 @@ export default function PostComponent({ post }: { post: Post }) {
           </div>
           <p className="mt-1">{post.content}</p>
           <div className="flex justify-between mt-4 items-center text-muted-foreground">
-            <Button variant="ghost" size="sm" className="hover:text-blue-500">
-              <MessageCircle className="w-4 h-4 mr-2" />
-              <span>{post.replies}</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hover:text-blue-500 p-0"
+            >
+              <MessageCircle className="w-5 h-5 mr-2" />
+              <span className="text-sm">{post.replies}</span>
             </Button>
             <Button variant="ghost" size="sm" className="hover:text-green-500">
-              <Repeat2 className="w-4 h-4 mr-2" />
-              <span>{post.reposts}</span>
+              <Repeat2 className="w-6 h-6 mr-2" />
+              <span className="text-sm">{post.reposts}</span>
             </Button>
             <Button
               variant="ghost"
@@ -121,14 +127,14 @@ export default function PostComponent({ post }: { post: Post }) {
               className="hover:text-red-500"
               onClick={() => toggleLike.mutate({ id: post.id })}
             >
-              <Heart className="w-4 h-4 mr-2" />
-              <span>{post.likes}</span>
+              <Heart className="w-5 h-5 mr-2" />
+              <span className="text-sm">{post.likes}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="hover:text-blue-500">
-              <Eye className="w-4 h-4 mr-2" />
-              <span>{post.views}</span>
-            </Button>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-row items-center hover:text-blue-500">
+              <ChartNoAxesColumn className="w-4 h-4 mr-2" />
+              <span className="text-sm">{post.views}</span>
+            </div>
+            <div className="flex items-center">
               <Button
                 variant="ghost"
                 size="sm"

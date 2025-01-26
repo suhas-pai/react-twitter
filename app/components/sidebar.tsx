@@ -10,12 +10,12 @@ import {
   MoreHorizontal,
   Search,
   User,
-  X,
   Settings,
 } from "lucide-react";
 
 import { Link, useRouterState } from "@tanstack/react-router";
-import { FileRoutesByFullPath } from "@/routeTree.gen";
+import type { FileRoutesByFullPath } from "@/routeTree.gen.ts";
+import { ComposePostDialog } from "./compose-post-dialog";
 
 const sidebarItems: {
   icon: React.ElementType;
@@ -41,15 +41,14 @@ export function Sidebar() {
         to="/"
         className="p-2 mb-4 inline-flex items-center justify-center md:justify-start"
       >
-        <X className="w-7 h-7" />
-        <span className="hidden md:inline ml-4 text-xl font-bold">X</span>
+        <span className="hidden md:inline ml-4 text-3xl font-bold">X</span>
       </Link>
-      <nav className="space-y-2 flex-1">
+      <nav className="space-y-2 flex-1 h-full">
         {sidebarItems.map((item) => {
           const Icon = item.icon;
           return (
             <Button
-              key={item.href}
+              key={item.label}
               variant="ghost"
               className={cn(
                 "w-full justify-center md:justify-start gap-4",
@@ -64,11 +63,17 @@ export function Sidebar() {
             </Button>
           );
         })}
-        <Button className="w-full bg-[#1D9BF0] hover:bg-[#1A8CD8] mt-4">
-          <span className="hidden md:inline">Post</span>
-          <span className="inline md:hidden">+</span>
-        </Button>
       </nav>
+      <div className="h-full">
+        <ComposePostDialog>
+          <Button
+            variant="ghost"
+            className="w-full justify-center md:justify-start gap-4"
+          >
+            Compose Post
+          </Button>
+        </ComposePostDialog>
+      </div>
       <Button
         variant="ghost"
         className="w-full justify-center md:justify-start gap-4"

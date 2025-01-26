@@ -133,9 +133,8 @@ function PasswordSecurityInfo({
 
       {/* Password requirements list */}
       <ul className="space-y-1.5" aria-label="Password requirements">
-        {strength.map((req, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          <li key={index} className="flex items-center space-x-2">
+        {strength.map((req) => (
+          <li key={req.text} className="flex items-center space-x-2">
             {req.met ? (
               <Check
                 size={16}

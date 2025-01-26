@@ -22,9 +22,9 @@ function RouteComponent() {
       </div>
       <div className="p-4">
         <h2 className="text-xl font-bold mb-4">Trends for you</h2>
-        {trendingTopics.map((topic, index) => (
+        {trendingTopics.map((topic) => (
           <div
-            key={index}
+            key={topic.topic}
             className="flex justify-between items-center py-3 border-b last:border-b-0"
           >
             <div>
@@ -41,8 +41,8 @@ function RouteComponent() {
       </div>
       <div className="border-t">
         <h2 className="text-xl font-bold p-4">What's happening</h2>
-        {explorePosts.map((post, i) => (
-          <PostComponent key={i} post={post} />
+        {explorePosts.map((post) => (
+          <PostComponent key={post.id} post={post} />
         ))}
       </div>
     </div>

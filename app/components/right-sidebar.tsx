@@ -30,8 +30,8 @@ export function RightSidebar() {
       </div>
       <div className="bg-gray-50 rounded-2xl p-4">
         <h2 className="text-xl font-bold mb-4">Trends for you</h2>
-        {trendingTopics.map((topic, index) => (
-          <div key={index} className="py-3">
+        {trendingTopics.map((topic) => (
+          <div key={topic.topic} className="py-3">
             <p className="text-sm text-gray-500">{topic.topic}</p>
             <p className="font-bold">{topic.posts} posts</p>
           </div>
@@ -39,10 +39,13 @@ export function RightSidebar() {
       </div>
       <div className="bg-gray-50 rounded-2xl p-4">
         <h2 className="text-xl font-bold mb-4">Who to follow</h2>
-        {suggestedUsers.map((user, index) => (
-          <div key={index} className="flex items-center justify-between py-3">
+        {suggestedUsers.map((user) => (
+          <div
+            key={user.handle}
+            className="flex items-center justify-between py-3"
+          >
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>
+              <div className="w-10 h-10 bg-gray-300 rounded-full mr-3" />
               <div>
                 <p className="font-bold">{user.name}</p>
                 <p className="text-gray-500">@{user.handle}</p>

@@ -8,13 +8,15 @@ import { TRPCReactProvider } from "./trpc";
 import "./index.css";
 
 // Import the generated route tree
-import { routeTree } from "../routeTree.gen";
+import { routeTree } from "../routeTree.gen.ts";
+import { QueryClient } from "@tanstack/react-query";
 
 // Create a new router instance
+const queryClient = new QueryClient();
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
-  context: {},
+  context: { queryClient },
 });
 
 // Register the router instance for type safety
@@ -25,9 +27,8 @@ declare module "@tanstack/react-router" {
 }
 
 // Render the app
-// biome-ignore lint/style/noNonNullAssertion: <explanation>
-const rootElement = document.getElementById("root")!;
-if (!rootElement.innerHTML) {
+const rootElement = document.getElementById("root");
+if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>

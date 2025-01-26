@@ -1,5 +1,6 @@
 import { Label } from "@radix-ui/react-label";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { useTheme } from "~/components/theme-provider";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -22,6 +23,7 @@ export const Route = createLazyFileRoute("/settings")({
 });
 
 function RouteComponent() {
+  const { theme, setTheme } = useTheme();
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-8">Settings</h1>
@@ -42,7 +44,12 @@ function RouteComponent() {
                   Toggle dark mode on or off
                 </p>
               </div>
-              <Switch />
+              <Switch
+                onCheckedChange={(checked) =>
+                  setTheme(checked ? "dark" : "light")
+                }
+                checked={theme === "dark"}
+              />
             </div>
             <div className="space-y-2">
               <Label>Language</Label>
@@ -115,7 +122,6 @@ function RouteComponent() {
             </div>
           </CardContent>
         </Card>
-
         <div className="flex justify-end gap-4">
           <Button variant="outline">Cancel</Button>
           <Button className="bg-[#1D9BF0] hover:bg-[#1A8CD8]">
