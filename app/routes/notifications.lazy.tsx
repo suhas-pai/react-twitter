@@ -1,8 +1,8 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Notification } from "~/lib/notification";
 
 export const Route = createLazyFileRoute("/notifications")({

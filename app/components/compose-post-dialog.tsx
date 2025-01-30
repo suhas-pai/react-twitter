@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,9 +10,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { useState } from "react";
-import { ComposePostUploads } from "./compose-post";
 import { trpc } from "~/client/trpc";
+import { ComposePostUploads } from "./compose-post";
 import { Textarea } from "./ui/textarea";
 
 export function ComposePostDialog({ children }: { children: React.ReactNode }) {
@@ -40,7 +40,7 @@ export function ComposePostDialog({ children }: { children: React.ReactNode }) {
           placeholder="What's happening?"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="min-h-[100px] text-xl border-0 focus-visible:ring-0 resize-none"
+          className="min-h-[150px] min-w-[400px] text-xl border-0 focus-visible:ring-0 resize-none"
         />
         <AlertDialogFooter>
           <div className="flex gap-2 justify-between w-full">

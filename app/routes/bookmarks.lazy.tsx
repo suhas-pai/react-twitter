@@ -1,9 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Bookmark } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
-import type { Post } from "@/lib/post";
-import PostComponent from "@/components/post";
+import PostComponent from "~/components/post";
+import type { Post } from "~/lib/post";
 
 export const Route = createLazyFileRoute("/bookmarks")({
   component: RouteComponent,

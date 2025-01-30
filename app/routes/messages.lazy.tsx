@@ -24,32 +24,32 @@ function MessagesPage() {
         </div>
       </div>
       <div>
-        {conversations.map((convo, index) => (
+        {conversations.map((conversation) => (
           <div
-            key={index}
+            key={conversation.id}
             className="flex items-center gap-4 p-4 border-b hover:bg-muted/50 transition-colors cursor-pointer"
           >
             <Avatar>
-              <AvatarImage src={`/placeholder.svg?height=40&width=40`} />
-              <AvatarFallback>{convo.name[0]}</AvatarFallback>
+              <AvatarImage src="/placeholder.svg?height=40&width=40" />
+              <AvatarFallback>{conversation.name[0]}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-baseline">
                 <p
-                  className={`font-medium truncate ${convo.unread ? "font-bold" : ""}`}
+                  className={`font-medium truncate ${conversation.unread ? "font-bold" : ""}`}
                 >
-                  {convo.name}
+                  {conversation.name}
                 </p>
                 <span
-                  className={`text-sm ${convo.unread ? "text-blue-500" : "text-muted-foreground"}`}
+                  className={`text-sm ${conversation.unread ? "text-blue-500" : "text-muted-foreground"}`}
                 >
-                  {convo.time}
+                  {conversation.time}
                 </span>
               </div>
               <p
-                className={`text-sm truncate ${convo.unread ? "text-foreground" : "text-muted-foreground"}`}
+                className={`text-sm truncate ${conversation.unread ? "text-foreground" : "text-muted-foreground"}`}
               >
-                {convo.message}
+                {conversation.message}
               </p>
             </div>
           </div>
@@ -66,24 +66,28 @@ function MessagesPage() {
 
 const conversations = [
   {
+    id: 0,
     name: "Alice Johnson",
     message: "Hey, how's it going?",
     time: "2m",
     unread: true,
   },
   {
+    id: 1,
     name: "Bob Smith",
     message: "Did you see the game last night?",
     time: "1h",
     unread: false,
   },
   {
+    id: 2,
     name: "Carol Williams",
     message: "Can we reschedule our meeting?",
     time: "3h",
     unread: true,
   },
   {
+    id: 3,
     name: "David Brown",
     message: "Thanks for your help!",
     time: "1d",

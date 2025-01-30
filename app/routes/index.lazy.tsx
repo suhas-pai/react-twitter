@@ -28,9 +28,10 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   const [content, setContent] = useState("");
   const [forYouPosts] = trpc.post.list.useSuspenseQuery();
-  const followingPosts: Post[] = [];
 
+  const followingPosts: Post[] = [];
   const { data: session } = useSession();
+
   console.log(session);
 
   return (

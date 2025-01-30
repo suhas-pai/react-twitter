@@ -1,14 +1,16 @@
 import { Label } from "@radix-ui/react-label";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useTheme } from "~/components/theme-provider";
-import { Button } from "~/components/ui/button";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
   CardTitle,
   CardHeader,
   CardContent,
-} from "~/components/ui/card";
+} from "@/components/ui/card";
+
 import {
   Select,
   SelectContent,
@@ -16,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Switch } from "~/components/ui/switch";
+import { Switch } from "@/components/ui/switch";
 
 export const Route = createLazyFileRoute("/settings")({
   component: RouteComponent,

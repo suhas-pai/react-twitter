@@ -1,11 +1,13 @@
-import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
-import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
-import type { AppRouter } from "~/server/trpc/root";
-import { createTRPCReact } from "@trpc/react-query";
-import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createQueryClient } from "~/trpc/query-client";
 import { useState } from "react";
 import superjson from "superjson";
+
+import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import { createTRPCReact } from "@trpc/react-query";
+import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import type { AppRouter } from "~/server/trpc/root";
+import { createQueryClient } from "~/trpc/query-client";
 
 export function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;

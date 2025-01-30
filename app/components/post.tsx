@@ -9,6 +9,7 @@ import {
   Repeat2,
   Share,
 } from "lucide-react";
+import { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,6 @@ import { trpc } from "@/client/trpc";
 
 import type { Post } from "@/lib/post";
 
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,

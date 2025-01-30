@@ -12,8 +12,8 @@ export const Route = createLazyFileRoute("/profile")({
 
 export default function ProfilePage() {
   const userPosts: Post[] = [];
-  const posts = userPosts.map((post, i) => (
-    <PostComponent key={i} post={post} />
+  const posts = userPosts.map((post) => (
+    <PostComponent key={post.id} post={post} />
   ));
 
   return (
@@ -46,6 +46,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex items-center gap-1">
               <Link2 className="w-4 h-4" />
+              {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
               <a href="#" className="text-[#1D9BF0] hover:underline">
                 jane.dev
               </a>
