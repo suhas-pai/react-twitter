@@ -16,8 +16,12 @@ export const Route = createLazyFileRoute("/")({
         <h1 className="text-xl font-bold p-4">Home</h1>
         <Tabs defaultValue="for-you" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="for-you">For You</TabsTrigger>
-            <TabsTrigger value="following">Following</TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="for-you">
+              For You
+            </TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="following">
+              Following
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -40,8 +44,12 @@ function Index() {
         <h1 className="text-xl font-bold p-4">Home</h1>
         <Tabs defaultValue="for-you">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="for-you">For You</TabsTrigger>
-            <TabsTrigger value="following">Following</TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="for-you">
+              For You
+            </TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="following">
+              Following
+            </TabsTrigger>
           </TabsList>
           <ComposePost content={content} setContent={setContent} />
           <TabsContent className="mt-0" value="for-you">

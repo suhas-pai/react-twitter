@@ -1,11 +1,10 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Link } from "@tanstack/react-router";
 
 import { AtSign, Check, Eye, EyeOff, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,50 +18,58 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
 import { authSchema } from "@/lib/auth/schema";
-
-function handleSubmit() {
-  // TODO
-}
+import { Label } from "./ui/label";
+import { cn } from "~/lib/utils";
 
 const formSchema = z.object({
   displayName: z
     .string()
     .min(authSchema.displayNameMinLength, {
-      message: "Display name is too short",
+      message: `Display name must be at least ${authSchema.displayNameMinLength} characters`,
     })
     .max(authSchema.displayNameMaxLength, {
-      message: "Display name is too long",
+      message: `Display name must be at most ${authSchema.displayNameMaxLength} characters`,
     }),
   username: z
     .string()
     .min(authSchema.usernameMinLength, {
-      message: "Username must be at least 2 characters",
+      message: `Username must be at least ${authSchema.usernameMinLength} characters`,
     })
     .max(authSchema.usernameMaxLength, {
-      message: "Username must be less than 50 characters",
+      message: `Username must be less than ${authSchema.usernameMaxLength} characters`,
     }),
   password: z
     .string()
     .min(authSchema.passwordMinLength, {
-      message: "Password must be at least 6 characters",
+      message: `Password must be at least ${authSchema.passwordMinLength} characters`,
     })
     .max(authSchema.passwordMaxLength, {
-      message: "Password must be less than 50 characters",
+      message: `Password must be less than ${authSchema.passwordMinLength} characters`,
     }),
   retypedPassword: z.string(),
   email: z.string().email({ message: "Email address is invalid" }),
 });
+
+const OrContinueWith = () => {
+  return (
+    <>
+      <p className="text-center text-sm text-muted-foreground">
+        or continue with
+      </p>
+      <div className="flex w-full justify-center space-x-4">
+        <Button variant="outline" className="w-full cursor-pointer">
+          <DiscordLogoIcon className="mr-2 h-4 w-4" />
+          <span>Discord</span>
+        </Button>
+        <Button variant="outline" className="w-full cursor-pointer">
+          <GitHubLogoIcon className="mr-2 h-4 w-4" />
+          <span>GitHub</span>
+        </Button>
+      </div>
+    </>
+  );
+};
 
 const getStrengthColor = (score: number) => {
   if (score === 0) return "bg-border";
@@ -169,31 +176,16 @@ export default function SignUp() {
     useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    validators: { onChange: formSchema },
     defaultValues: {
       displayName: "",
       username: "",
       password: "",
+      retypedPassword: "",
       email: "",
     },
+    onSubmit: async () => {},
   });
-
-  const [email, password, retypedPassword] = form.watch([
-    "email",
-    "password",
-    "retypedPassword",
-  ]);
-
-  const strength = checkStrength(password);
-  const strengthScore = useMemo(
-    () => strength.filter((req) => req.met).length,
-    [strength]
-  );
-
-  const emailIsValid = useMemo(
-    () => z.string().email().safeParse(email).success,
-    [email]
-  );
 
   return (
     <div className="flex h-full items-center justify-center">
@@ -205,140 +197,180 @@ export default function SignUp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <FormField
-                control={form.control}
-                name="displayName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
+          <form className="space-y-3">
+            <form.Field
+              name="displayName"
+              // biome-ignore lint/correctness/noChildrenProp: <explanation>
+              children={(field) => {
+                const hasError =
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0;
+
+                return (
+                  <>
+                    <Label>
                       Display Name
                       <span className="text-destructive"> *</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is the name shown on your profile.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
+                    </Label>
+                    <Input
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    <p
+                      className={cn(
+                        "text-[0.8rem] text-muted-foreground",
+                        hasError
+                          ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
+                          : ""
+                      )}
+                    >
+                      {hasError
+                        ? field.state.meta.errors[0]
+                        : "This is the name shown on your profile."}
+                    </p>
+                  </>
+                );
+              }}
+            />
+            <form.Field
+              name="username"
+              // biome-ignore lint/correctness/noChildrenProp: <explanation>
+              children={(field) => {
+                const hasError =
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0;
+
+                return (
+                  <>
+                    <Label>
                       Username
                       <span className="text-destructive"> *</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input autoComplete="username" required {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Your username will serve as your social media handle.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="password">
+                    </Label>
+                    <Input
+                      autoComplete="username"
+                      required
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    <p
+                      className={cn(
+                        "text-[0.8rem] text-muted-foreground",
+                        hasError
+                          ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
+                          : ""
+                      )}
+                    >
+                      {hasError
+                        ? field.state.meta.errors[0]
+                        : "Your username will serve as your social media handle."}
+                    </p>
+                  </>
+                );
+              }}
+            />
+            <form.Field
+              name="password"
+              // biome-ignore lint/correctness/noChildrenProp: <explanation>
+              children={(field) => {
+                const strength = checkStrength(field.state.value);
+                const strengthScore = strength.filter((req) => req.met).length;
+
+                return (
+                  <>
+                    <Label htmlFor="password">
                       Password
                       <span className="text-destructive"> *</span>
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          id="password"
-                          className={
-                            strengthScore < 4
-                              ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
-                              : ""
-                          }
-                          autoComplete="new-password"
-                          placeholder="Password"
-                          type={isPasswordVisible ? "text" : "password"}
-                          onPaste={(e) => e.preventDefault()}
-                          aria-invalid={strengthScore < 4}
-                          aria-describedby="password-strength"
-                          {...field}
-                        />
-                        <button
-                          className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                          type="button"
-                          onClick={() => setIsPasswordVisible((old) => !old)}
-                          aria-label={
-                            isPasswordVisible
-                              ? "Hide password"
-                              : "Show password"
-                          }
-                          aria-pressed={isPasswordVisible}
-                          aria-controls="password"
-                        >
-                          {isPasswordVisible ? (
-                            <EyeOff
-                              size={16}
-                              strokeWidth={2}
-                              aria-hidden="true"
-                              role="presentation"
-                            />
-                          ) : (
-                            <Eye
-                              size={16}
-                              strokeWidth={2}
-                              aria-hidden="true"
-                              role="presentation"
-                            />
-                          )}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormDescription>
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        className={
+                          field.state.meta.isTouched && strengthScore < 4
+                            ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                            : ""
+                        }
+                        autoComplete="new-password"
+                        placeholder="Password"
+                        type={isPasswordVisible ? "text" : "password"}
+                        onPaste={(e) => e.preventDefault()}
+                        aria-invalid={strengthScore < 4}
+                        aria-describedby="password-strength"
+                        name={field.name}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      <button
+                        className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                        type="button"
+                        onClick={() => setIsPasswordVisible((old) => !old)}
+                        aria-label={
+                          isPasswordVisible ? "Hide password" : "Show password"
+                        }
+                        aria-pressed={isPasswordVisible}
+                        aria-controls="password"
+                      >
+                        {isPasswordVisible ? (
+                          <EyeOff
+                            size={16}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                        ) : (
+                          <Eye
+                            size={16}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                        )}
+                      </button>
+                    </div>
+                    <p className="text-[0.8rem] text-muted-foreground">
                       Your password is required to be secure.
-                    </FormDescription>
-                    <FormMessage />
+                    </p>
                     <PasswordSecurityInfo
                       strengthScore={strengthScore}
                       strength={strength}
                     />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="retypedPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="retype-password">
+                  </>
+                );
+              }}
+            />
+            <form.Field
+              name="retypedPassword"
+              // biome-ignore lint/correctness/noChildrenProp: <explanation>
+              children={(field) => {
+                const password = form.getFieldValue("password");
+                const hasPasswordsError =
+                  password !== field.state.value &&
+                  password !== "" &&
+                  field.state.value !== "";
+
+                return (
+                  <>
+                    <Label htmlFor="retype-password">
                       Retype Password
                       <span className="text-destructive"> *</span>
-                    </FormLabel>
+                    </Label>
                     <div className="relative">
-                      <FormControl>
-                        <Input
-                          id="retype-password"
-                          className={
-                            password !== retypedPassword &&
-                            password !== "" &&
-                            retypedPassword !== ""
-                              ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
-                              : ""
-                          }
-                          placeholder="Password"
-                          type={isRetypedPasswordVisible ? "text" : "password"}
-                          onPaste={(e) => e.preventDefault()}
-                          autoComplete="repeat-password"
-                          {...field}
-                        />
-                      </FormControl>
+                      <Input
+                        id="retype-password"
+                        className={
+                          hasPasswordsError
+                            ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                            : ""
+                        }
+                        placeholder="Password"
+                        type={isRetypedPasswordVisible ? "text" : "password"}
+                        onPaste={(e) => e.preventDefault()}
+                        autoComplete="repeat-password"
+                        name={field.name}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
                       <button
                         className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 ring-offset-background transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
@@ -370,46 +402,53 @@ export default function SignUp() {
                         )}
                       </button>
                     </div>
-                    <FormDescription
-                      className={
-                        password !== retypedPassword &&
-                        password !== "" &&
-                        retypedPassword !== ""
+                    <p
+                      className={cn(
+                        "text-[0.8rem]",
+                        hasPasswordsError
                           ? "mt-2 text-xs text-destructive font-medium"
-                          : ""
-                      }
+                          : "text-muted-foreground"
+                      )}
                       aria-live="polite"
                     >
-                      {password !== retypedPassword &&
-                      password !== "" &&
-                      retypedPassword !== ""
+                      {hasPasswordsError
                         ? "Passwords do not match"
                         : "Re-enter your password."}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
+                    </p>
+                  </>
+                );
+              }}
+            />
+            <form.Field
+              name="email"
+              // biome-ignore lint/correctness/noChildrenProp: <explanation>
+              children={(field) => {
+                const hasEmailError =
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0;
+
+                return (
+                  <>
                     <div className="space-y-2">
-                      <FormLabel htmlFor="email">
+                      <Label htmlFor="email">
                         Email
                         <span className="text-destructive"> *</span>
-                      </FormLabel>
+                      </Label>
                       <div className="relative">
-                        <FormControl>
-                          <Input
-                            id="email"
-                            className={`peer pl-9 ${email !== "" && !emailIsValid ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30" : ""}`}
-                            placeholder="Email"
-                            type="email"
-                            {...field}
-                          />
-                        </FormControl>
+                        <Input
+                          id="email"
+                          className={cn(
+                            "peer pl-9",
+                            hasEmailError
+                              ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                              : ""
+                          )}
+                          placeholder="Email"
+                          type="email"
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        />
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 text-muted-foreground/80 peer-disabled:opacity-50">
                           <AtSign
                             size={16}
@@ -420,42 +459,39 @@ export default function SignUp() {
                         </div>
                       </div>
                     </div>
-                    <FormDescription
-                      className={
-                        email !== "" && !emailIsValid
+                    <p
+                      className={cn(
+                        "text-[0.8rem] text-muted-foreground",
+                        hasEmailError
                           ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
                           : ""
-                      }
+                      )}
                     >
-                      {email !== "" && !emailIsValid
+                      {hasEmailError
                         ? "Please enter a valid email address"
                         : "Your email is required to verify your account."}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full">
-                Sign Up
-              </Button>
-            </form>
-          </Form>
+                    </p>
+                  </>
+                );
+              }}
+            />
+            <form.Subscribe
+              selector={(state) => state.canSubmit}
+              // biome-ignore lint/correctness/noChildrenProp: <explanation>
+              children={(canSubmit) => (
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={!canSubmit || form.state.isPristine}
+                >
+                  Sign Up
+                </Button>
+              )}
+            />
+          </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <hr className="w-full" />
-          <p className="text-center text-sm text-muted-foreground">
-            or continue with
-          </p>
-          <div className="flex w-full justify-center space-x-4">
-            <Button variant="outline" className="w-full">
-              <DiscordLogoIcon className="mr-2 h-4 w-4" />
-              <span>Discord</span>
-            </Button>
-            <Button variant="outline" className="w-full">
-              <GitHubLogoIcon className="mr-2 h-4 w-4" />
-              <span>GitHub</span>
-            </Button>
-          </div>
           <Button variant="link">
             <Link to="/login">Already have an account? Log In</Link>
           </Button>

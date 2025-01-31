@@ -46,7 +46,6 @@ export function Sidebar() {
       </Link>
       <nav className="space-y-2 flex-1 h-full">
         {sidebarItems.map((item) => {
-          const Icon = item.icon;
           return (
             <Button
               key={item.label}
@@ -58,7 +57,7 @@ export function Sidebar() {
               asChild
             >
               <Link to={item.href}>
-                <Icon className="w-5 h-5" />
+                <item.icon className="w-5 h-5" />
                 <span className="hidden md:inline">{item.label}</span>
               </Link>
             </Button>

@@ -11,6 +11,7 @@ import { authSchema } from "~/lib/auth/schema";
 
 import { twoFactor } from "better-auth/plugins";
 import { magicLink } from "better-auth/plugins/magic-link";
+import { passkey } from "better-auth/plugins/passkey";
 
 export const auth = betterAuth({
   basePath: "/api/betterauth",
@@ -37,6 +38,7 @@ export const auth = betterAuth({
     sendVerificationEmail: async () => {},
   },
   plugins: [
+    passkey(),
     twoFactor(),
     magicLink({
       sendMagicLink: async () => {
