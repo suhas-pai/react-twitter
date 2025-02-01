@@ -1,7 +1,8 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { CalendarDays, Link2, MapPin } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Link2, MapPin } from "lucide-react";
 
 import type { Post } from "@/lib/post";
 import PostComponent from "@/components/post";

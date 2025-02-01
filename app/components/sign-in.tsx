@@ -14,12 +14,13 @@ import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { Link } from "@tanstack/react-router";
 
-import { useState } from "react";
-import { AtSign, Eye, EyeOff, Mail } from "lucide-react";
+import { AtSign, Mail } from "lucide-react";
 
 import { signIn } from "@/client/auth/betterauth";
 import { authSchema } from "@/lib/auth/schema";
 import { Label } from "./ui/label";
+import { PasswordInput } from "./password-input";
+import { cn } from "~/lib/utils";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email address is invalid" }),
@@ -34,7 +35,6 @@ const formSchema = z.object({
 });
 
 export default function Login() {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     validators: {
       onChange: formSchema,
@@ -75,43 +75,55 @@ export default function Login() {
             <form.Field
               name="email"
               // biome-ignore lint/correctness/noChildrenProp: <explanation></explanation>
-              children={(field) => (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor={field.name}>Email</Label>
-                    <div className="relative">
-                      <Input
-                        id={field.name}
-                        className={`peer pl-9 ${field.state.meta.errors.length > 0 ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/30" : ""}`}
-                        placeholder="Email"
-                        type="email"
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      />
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 text-muted-foreground/80 peer-disabled:opacity-50">
-                        <AtSign
-                          size={16}
-                          strokeWidth={2}
-                          aria-hidden="true"
-                          role="presentation"
+              children={(field) => {
+                const hasErrors =
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0;
+
+                return (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Email</Label>
+                      <div className="relative">
+                        <Input
+                          id={field.name}
+                          className={cn(
+                            "peer pl-9",
+                            hasErrors
+                              ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                              : ""
+                          )}
+                          placeholder="Email"
+                          type="email"
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
                         />
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 text-muted-foreground/80 peer-disabled:opacity-50">
+                          <AtSign
+                            size={16}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                        </div>
                       </div>
+                      <p
+                        className={cn(
+                          "text-[0.8rem] text-muted-foreground",
+                          hasErrors
+                            ? "text-destructive font-medium"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {field.state.meta.errors
+                          ? "Your email address is required to sign in."
+                          : "Please enter a valid email address."}
+                      </p>
                     </div>
-                    <p
-                      className={`text-[0.8rem] text-muted-foreground ${
-                        field.state.meta.errors.length > 0
-                          ? "text-destructive font-medium"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      {field.state.meta.errors
-                        ? "Your email address is required to sign in."
-                        : "Please enter a valid email address."}
-                    </p>
-                  </div>
-                </>
-              )}
+                  </>
+                );
+              }}
             />
             <form.Field
               name="password"
@@ -120,39 +132,12 @@ export default function Login() {
                 <>
                   <Label>Password</Label>
                   <div className="relative">
-                    <Input
-                      type={isPasswordVisible ? "text" : "password"}
+                    <PasswordInput
                       autoComplete="current-password"
                       name={field.name}
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
-                    <button
-                      className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                      type="button"
-                      onClick={() => setIsPasswordVisible((old) => !old)}
-                      aria-label={
-                        isPasswordVisible ? "Hide password" : "Show password"
-                      }
-                      aria-pressed={isPasswordVisible}
-                      aria-controls="password"
-                    >
-                      {isPasswordVisible ? (
-                        <EyeOff
-                          size={16}
-                          strokeWidth={2}
-                          aria-hidden="true"
-                          role="presentation"
-                        />
-                      ) : (
-                        <Eye
-                          size={16}
-                          strokeWidth={2}
-                          aria-hidden="true"
-                          role="presentation"
-                        />
-                      )}
-                    </button>
                     <p className="text-[0.8rem] text-muted-foreground ">
                       Provide your password.
                     </p>

@@ -24,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { cn } from "~/lib/utils";
 
 export default function PostComponent({ post }: { post: Post }) {
   const toggleLike = trpc.post.togglePostLike.useMutation({
@@ -141,7 +142,10 @@ export default function PostComponent({ post }: { post: Post }) {
                 onClick={() => setIsBookmarked(!isBookmarked)}
               >
                 <Bookmark
-                  className={`w-4 h-4 ${isBookmarked ? "fill-current text-blue-500" : ""}`}
+                  className={cn(
+                    "w-4 h-4",
+                    isBookmarked ? "fill-current text-blue-500" : ""
+                  )}
                 />
               </Button>
               <Button variant="ghost" size="sm">

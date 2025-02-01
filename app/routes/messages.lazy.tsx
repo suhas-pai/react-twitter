@@ -1,8 +1,10 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Settings, Search } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "~/lib/utils";
 
 export const Route = createLazyFileRoute("/messages")({
   component: () => <MessagesPage />,
@@ -36,18 +38,31 @@ function MessagesPage() {
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-baseline">
                 <p
-                  className={`font-medium truncate ${conversation.unread ? "font-bold" : ""}`}
+                  className={cn(
+                    "font-medium truncate",
+                    conversation.unread ? "font-bold" : ""
+                  )}
                 >
                   {conversation.name}
                 </p>
                 <span
-                  className={`text-sm ${conversation.unread ? "text-blue-500" : "text-muted-foreground"}`}
+                  className={cn(
+                    "text-sm",
+                    conversation.unread
+                      ? "text-blue-500"
+                      : "text-muted-foreground"
+                  )}
                 >
                   {conversation.time}
                 </span>
               </div>
               <p
-                className={`text-sm truncate ${conversation.unread ? "text-foreground" : "text-muted-foreground"}`}
+                className={cn(
+                  "text-sm truncate",
+                  conversation.unread
+                    ? "text-foreground"
+                    : "text-muted-foreground"
+                )}
               >
                 {conversation.message}
               </p>

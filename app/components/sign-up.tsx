@@ -3,8 +3,7 @@ import { z } from "zod";
 import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Link } from "@tanstack/react-router";
 
-import { AtSign, Check, Eye, EyeOff, X } from "lucide-react";
-import { useState } from "react";
+import { AtSign, Check, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +20,8 @@ import {
 import { authSchema } from "@/lib/auth/schema";
 import { Label } from "./ui/label";
 import { cn } from "~/lib/utils";
+import { signUp } from "~/client/auth/betterauth";
+import { PasswordInput } from "./password-input";
 
 const formSchema = z.object({
   displayName: z
@@ -125,7 +126,10 @@ function PasswordSecurityInfo({
         tabIndex={0}
       >
         <div
-          className={`h-full ${getStrengthColor(strengthScore)} transition-all duration-500 ease-out`}
+          className={cn(
+            "h-full transition-all duration-500 ease-out",
+            getStrengthColor(strengthScore)
+          )}
           style={{ width: `${(strengthScore / 4) * 100}%` }}
         />
       </div>
@@ -156,7 +160,10 @@ function PasswordSecurityInfo({
               />
             )}
             <span
-              className={`text-xs ${req.met ? "text-emerald-600" : "text-muted-foreground"}`}
+              className={cn(
+                "text-xs",
+                req.met ? "text-emerald-600" : "text-muted-foreground"
+              )}
             >
               {req.text}
               <span className="sr-only">
@@ -171,10 +178,6 @@ function PasswordSecurityInfo({
 }
 
 export default function SignUp() {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isRetypedPasswordVisible, setIsRetypedPasswordVisible] =
-    useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     validators: { onChange: formSchema },
     defaultValues: {
@@ -184,7 +187,13 @@ export default function SignUp() {
       retypedPassword: "",
       email: "",
     },
-    onSubmit: async () => {},
+    onSubmit: async ({ value: { displayName, email, password } }) => {
+      await signUp.email({
+        name: displayName,
+        email,
+        password,
+      });
+    },
   });
 
   return (
@@ -283,51 +292,16 @@ export default function SignUp() {
                       Password
                       <span className="text-destructive"> *</span>
                     </Label>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        className={
-                          field.state.meta.isTouched && strengthScore < 4
-                            ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
-                            : ""
-                        }
-                        autoComplete="new-password"
-                        placeholder="Password"
-                        type={isPasswordVisible ? "text" : "password"}
-                        onPaste={(e) => e.preventDefault()}
-                        aria-invalid={strengthScore < 4}
-                        aria-describedby="password-strength"
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      />
-                      <button
-                        className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                        type="button"
-                        onClick={() => setIsPasswordVisible((old) => !old)}
-                        aria-label={
-                          isPasswordVisible ? "Hide password" : "Show password"
-                        }
-                        aria-pressed={isPasswordVisible}
-                        aria-controls="password"
-                      >
-                        {isPasswordVisible ? (
-                          <EyeOff
-                            size={16}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            role="presentation"
-                          />
-                        ) : (
-                          <Eye
-                            size={16}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            role="presentation"
-                          />
-                        )}
-                      </button>
-                    </div>
+                    <PasswordInput
+                      className={
+                        field.state.meta.isTouched && strengthScore < 4
+                          ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                          : ""
+                      }
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
                     <p className="text-[0.8rem] text-muted-foreground">
                       Your password is required to be secure.
                     </p>
@@ -355,53 +329,16 @@ export default function SignUp() {
                       Retype Password
                       <span className="text-destructive"> *</span>
                     </Label>
-                    <div className="relative">
-                      <Input
-                        id="retype-password"
-                        className={
-                          hasPasswordsError
-                            ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
-                            : ""
-                        }
-                        placeholder="Password"
-                        type={isRetypedPasswordVisible ? "text" : "password"}
-                        onPaste={(e) => e.preventDefault()}
-                        autoComplete="repeat-password"
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      />
-                      <button
-                        className="absolute inset-y-px right-px flex h-full w-9 items-center justify-center rounded-r-lg text-muted-foreground/80 ring-offset-background transition-shadow hover:text-foreground focus-visible:border focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                        type="button"
-                        onClick={() =>
-                          setIsRetypedPasswordVisible((old) => !old)
-                        }
-                        aria-label={
-                          isRetypedPasswordVisible
-                            ? "Hide password"
-                            : "Show password"
-                        }
-                        aria-pressed={isRetypedPasswordVisible}
-                        aria-controls="password"
-                      >
-                        {isRetypedPasswordVisible ? (
-                          <EyeOff
-                            size={16}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            role="presentation"
-                          />
-                        ) : (
-                          <Eye
-                            size={16}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            role="presentation"
-                          />
-                        )}
-                      </button>
-                    </div>
+                    <PasswordInput
+                      className={
+                        hasPasswordsError
+                          ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                          : ""
+                      }
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
                     <p
                       className={cn(
                         "text-[0.8rem]",
