@@ -1,7 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 
-import { Sidebar } from "@/components/sidebar";
+import { Sidebar } from "~/components/sidebar";
 
 export interface RouterContext {
   queryClient: QueryClient;

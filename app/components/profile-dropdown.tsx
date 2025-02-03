@@ -3,7 +3,6 @@ import {
   User,
   Cloud,
   CreditCard,
-  Github,
   Keyboard,
   LifeBuoy,
   Mail,
@@ -30,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useTheme } from "./theme-provider";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function ProfileButton({
   children,
@@ -116,7 +116,7 @@ export default function ProfileButton({
           rel="noreferrer"
         >
           <DropdownMenuItem className="cursor-pointer">
-            <Github className="mr-2 h-4 w-4" />
+            <GitHubLogoIcon className="mr-2 h-4 w-4" />
             <span>GitHub</span>
           </DropdownMenuItem>
         </a>

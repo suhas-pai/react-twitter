@@ -1,5 +1,11 @@
+import { useForm } from "@tanstack/react-form";
+import { Link } from "@tanstack/react-router";
+
+import React from "react";
+import { Mail } from "lucide-react";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import {
   Card,
@@ -10,17 +16,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useForm } from "@tanstack/react-form";
-import { z } from "zod";
-import { Link } from "@tanstack/react-router";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
-import { AtSign, Mail } from "lucide-react";
+import { signIn } from "~/client/auth/betterauth";
+import { authSchema } from "~/lib/auth/schema";
 
-import { signIn } from "@/client/auth/betterauth";
-import { authSchema } from "@/lib/auth/schema";
-import { Label } from "./ui/label";
 import { PasswordInput } from "./password-input";
 import { cn } from "~/lib/utils";
+import { EmailInput } from "./email-input";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email address is invalid" }),
@@ -35,6 +39,7 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const [rememberMe, setRememberMe] = React.useState(true);
   const form = useForm<z.infer<typeof formSchema>>({
     validators: {
       onChange: formSchema,
@@ -48,9 +53,13 @@ export default function Login() {
       await signIn.email({
         email,
         password,
+        rememberMe,
         fetchOptions: {
           onSuccess(ctx) {
             console.log(ctx);
+          },
+          onError(ctx) {
+            console.log(`Error: ${ctx}`);
           },
         },
       });
@@ -81,47 +90,32 @@ export default function Login() {
                   field.state.meta.errors.length > 0;
 
                 return (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor={field.name}>Email</Label>
-                      <div className="relative">
-                        <Input
-                          id={field.name}
-                          className={cn(
-                            "peer pl-9",
-                            hasErrors
-                              ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
-                              : ""
-                          )}
-                          placeholder="Email"
-                          type="email"
-                          name={field.name}
-                          value={field.state.value}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                        />
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 text-muted-foreground/80 peer-disabled:opacity-50">
-                          <AtSign
-                            size={16}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            role="presentation"
-                          />
-                        </div>
-                      </div>
-                      <p
-                        className={cn(
-                          "text-[0.8rem] text-muted-foreground",
-                          hasErrors
-                            ? "text-destructive font-medium"
-                            : "text-muted-foreground"
-                        )}
-                      >
-                        {field.state.meta.errors
-                          ? "Your email address is required to sign in."
-                          : "Please enter a valid email address."}
-                      </p>
-                    </div>
-                  </>
+                  <EmailInput
+                    className={cn(
+                      "peer pl-9",
+                      hasErrors
+                        ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                        : ""
+                    )}
+                    placeholder="Email"
+                    label="Email"
+                    name={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  >
+                    <p
+                      className={cn(
+                        "text-[0.8rem] text-muted-foreground",
+                        hasErrors
+                          ? "text-destructive font-medium"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      {field.state.meta.errors
+                        ? "Your email address is required to sign in."
+                        : "Please enter a valid email address."}
+                    </p>
+                  </EmailInput>
                 );
               }}
             />
@@ -130,25 +124,32 @@ export default function Login() {
               // biome-ignore lint/correctness/noChildrenProp: <explanation>
               children={(field) => (
                 <>
-                  <Label>Password</Label>
-                  <div className="relative">
-                    <PasswordInput
-                      autoComplete="current-password"
-                      name={field.name}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
+                  <PasswordInput
+                    label={"Password"}
+                    autoComplete="current-password"
+                    name={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  >
                     <p className="text-[0.8rem] text-muted-foreground ">
-                      Provide your password.
+                      Please provide your password.
                     </p>
+                  </PasswordInput>
+                  <div className="flex justify-center gap-2">
+                    <Checkbox
+                      id="remember-me"
+                      defaultChecked={rememberMe}
+                      onCheckedChange={(old) => setRememberMe(!old)}
+                    />
+                    <Label htmlFor="remember-me">Remember me</Label>
                   </div>
                 </>
               )}
             />
             <form.Subscribe
-              selector={(state) => [state.canSubmit]}
+              selector={(state) => state.canSubmit}
               // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={([canSubmit]) => (
+              children={(canSubmit) => (
                 <Button
                   type="submit"
                   className="w-full cursor-pointer"

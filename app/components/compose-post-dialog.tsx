@@ -10,9 +10,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { Textarea } from "@/components/ui/textarea";
+
 import { trpc } from "~/client/trpc";
 import { ComposePostUploads } from "./compose-post";
-import { Textarea } from "./ui/textarea";
 
 export function ComposePostDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);

@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 
 const trendingTopics = [
-  { topic: "#TechNews", posts: "125K" },
-  { topic: "World Cup", posts: "89K" },
-  { topic: "Climate Change", posts: "56K" },
-  { topic: "#CodingLife", posts: "42K" },
-  { topic: "SpaceX", posts: "38K" },
+  { id: 0, topic: "#TechNews", posts: "125K" },
+  { id: 1, topic: "World Cup", posts: "89K" },
+  { id: 2, topic: "Climate Change", posts: "56K" },
+  { id: 3, topic: "#CodingLife", posts: "42K" },
+  { id: 4, topic: "SpaceX", posts: "38K" },
 ];
 
 const suggestedUsers = [
@@ -31,7 +31,7 @@ export function RightSidebar() {
       <div className="bg-gray-50 rounded-2xl p-4">
         <h2 className="text-xl font-bold mb-4">Trends for you</h2>
         {trendingTopics.map((topic) => (
-          <div key={topic.topic} className="py-3">
+          <div key={topic.id} className="py-3">
             <p className="text-sm text-gray-500">{topic.topic}</p>
             <p className="font-bold">{topic.posts} posts</p>
           </div>

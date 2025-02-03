@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { twoFactor, magicLink } from "better-auth/plugins";
+import { twoFactor, magicLink, username } from "better-auth/plugins";
 import { passkey } from "better-auth/plugins/passkey";
 import { authSchema } from "~/lib/auth/schema";
 
@@ -23,6 +23,7 @@ export const auth = betterAuth({
     sendVerificationEmail: async () => {},
   },
   plugins: [
+    username(),
     passkey(),
     twoFactor(),
     magicLink({

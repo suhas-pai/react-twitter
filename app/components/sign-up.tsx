@@ -1,9 +1,9 @@
-import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 
-import { AtSign, Check, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import { Label } from "./ui/label";
 import { cn } from "~/lib/utils";
 import { signUp } from "~/client/auth/betterauth";
 import { PasswordInput } from "./password-input";
+import { EmailInput } from "./email-input";
 
 const formSchema = z.object({
   displayName: z
@@ -50,6 +51,7 @@ const formSchema = z.object({
     }),
   retypedPassword: z.string(),
   email: z.string().email({ message: "Email address is invalid" }),
+  iconImage: z.string(),
 });
 
 const OrContinueWith = () => {
@@ -186,19 +188,24 @@ export default function SignUp() {
       password: "",
       retypedPassword: "",
       email: "",
+      iconImage: "",
     },
-    onSubmit: async ({ value: { displayName, email, password } }) => {
+    onSubmit: async ({
+      value: { displayName, username, email, password, iconImage },
+    }) => {
       await signUp.email({
         name: displayName,
         email,
         password,
+        username,
+        image: iconImage,
       });
     },
   });
 
   return (
     <div className="flex h-full items-center justify-center">
-      <Card className="w-[400px] bg-primary-foreground">
+      <Card className="w-[700px] bg-primary-foreground">
         <CardHeader>
           <CardTitle>Create Your Account</CardTitle>
           <CardDescription>
@@ -207,75 +214,117 @@ export default function SignUp() {
         </CardHeader>
         <CardContent>
           <form className="space-y-3">
+            <div className="flex flex-row justify-between gap-5">
+              <form.Field
+                name="displayName"
+                // biome-ignore lint/correctness/noChildrenProp: <explanation>
+                children={(field) => {
+                  const hasError =
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0;
+
+                  return (
+                    <div className="w-full">
+                      <Label>
+                        Display Name
+                        <span className="text-destructive"> *</span>
+                      </Label>
+                      <Input
+                        name={field.name}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      <p
+                        className={cn(
+                          "text-[0.8rem] text-muted-foreground",
+                          hasError
+                            ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
+                            : ""
+                        )}
+                      >
+                        {hasError
+                          ? field.state.meta.errors[0]
+                          : "This is the name shown on your profile."}
+                      </p>
+                    </div>
+                  );
+                }}
+              />
+              <form.Field
+                name="username"
+                // biome-ignore lint/correctness/noChildrenProp: <explanation>
+                children={(field) => {
+                  const hasError =
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0;
+
+                  return (
+                    <div className="w-full">
+                      <Label>
+                        Username <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        autoComplete="username"
+                        required
+                        name={field.name}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      <p
+                        className={cn(
+                          "text-[0.8rem] text-muted-foreground",
+                          hasError
+                            ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
+                            : ""
+                        )}
+                      >
+                        {hasError
+                          ? field.state.meta.errors[0]
+                          : "Your username will serve as your social media handle."}
+                      </p>
+                    </div>
+                  );
+                }}
+              />
+            </div>
             <form.Field
-              name="displayName"
+              name="email"
               // biome-ignore lint/correctness/noChildrenProp: <explanation>
               children={(field) => {
-                const hasError =
+                const hasEmailError =
                   field.state.meta.isTouched &&
                   field.state.meta.errors.length > 0;
 
                 return (
-                  <>
-                    <Label>
-                      Display Name
-                      <span className="text-destructive"> *</span>
-                    </Label>
-                    <Input
-                      name={field.name}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
+                  <EmailInput
+                    className={cn(
+                      "peer pl-9",
+                      hasEmailError
+                        ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
+                        : ""
+                    )}
+                    label={
+                      <>
+                        Email <span className="text-destructive">*</span>
+                      </>
+                    }
+                    name={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  >
                     <p
                       className={cn(
                         "text-[0.8rem] text-muted-foreground",
-                        hasError
+                        hasEmailError
                           ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
                           : ""
                       )}
                     >
-                      {hasError
-                        ? field.state.meta.errors[0]
-                        : "This is the name shown on your profile."}
+                      {hasEmailError
+                        ? "Please enter a valid email address"
+                        : "Your email is required to verify your account."}
                     </p>
-                  </>
-                );
-              }}
-            />
-            <form.Field
-              name="username"
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(field) => {
-                const hasError =
-                  field.state.meta.isTouched &&
-                  field.state.meta.errors.length > 0;
-
-                return (
-                  <>
-                    <Label>
-                      Username
-                      <span className="text-destructive"> *</span>
-                    </Label>
-                    <Input
-                      autoComplete="username"
-                      required
-                      name={field.name}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    <p
-                      className={cn(
-                        "text-[0.8rem] text-muted-foreground",
-                        hasError
-                          ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
-                          : ""
-                      )}
-                    >
-                      {hasError
-                        ? field.state.meta.errors[0]
-                        : "Your username will serve as your social media handle."}
-                    </p>
-                  </>
+                  </EmailInput>
                 );
               }}
             />
@@ -288,19 +337,22 @@ export default function SignUp() {
 
                 return (
                   <>
-                    <Label htmlFor="password">
-                      Password
-                      <span className="text-destructive"> *</span>
-                    </Label>
                     <PasswordInput
                       className={
                         field.state.meta.isTouched && strengthScore < 4
                           ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
                           : ""
                       }
+                      label={
+                        <>
+                          Password <span className="text-destructive">*</span>
+                        </>
+                      }
                       name={field.name}
                       value={field.state.value}
+                      placeholder="Password"
                       onChange={(e) => field.handleChange(e.target.value)}
+                      autoComplete="new-password"
                     />
                     <p className="text-[0.8rem] text-muted-foreground">
                       Your password is required to be secure.
@@ -325,19 +377,23 @@ export default function SignUp() {
 
                 return (
                   <>
-                    <Label htmlFor="retype-password">
-                      Retype Password
-                      <span className="text-destructive"> *</span>
-                    </Label>
                     <PasswordInput
                       className={
                         hasPasswordsError
                           ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
                           : ""
                       }
+                      label={
+                        <>
+                          Retype Password
+                          <span className="text-destructive"> *</span>
+                        </>
+                      }
                       name={field.name}
                       value={field.state.value}
+                      placeholder="Retype Password"
                       onChange={(e) => field.handleChange(e.target.value)}
+                      autoComplete="new-password"
                     />
                     <p
                       className={cn(
@@ -357,60 +413,26 @@ export default function SignUp() {
               }}
             />
             <form.Field
-              name="email"
+              name="iconImage"
               // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(field) => {
-                const hasEmailError =
-                  field.state.meta.isTouched &&
-                  field.state.meta.errors.length > 0;
-
-                return (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">
-                        Email
-                        <span className="text-destructive"> *</span>
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="email"
-                          className={cn(
-                            "peer pl-9",
-                            hasEmailError
-                              ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
-                              : ""
-                          )}
-                          placeholder="Email"
-                          type="email"
-                          name={field.name}
-                          value={field.state.value}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                        />
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 text-muted-foreground/80 peer-disabled:opacity-50">
-                          <AtSign
-                            size={16}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            role="presentation"
-                          />
-                        </div>
-                      </div>
+              children={(field) => (
+                <div className="flex items-center gap-2 w-full">
+                  {field.state.value && (
+                    <div className="relative w-16 h-16 rounded-sm overflow-hidden">
+                      <img src={field.state.value} alt="Profile preview" />
                     </div>
-                    <p
-                      className={cn(
-                        "text-[0.8rem] text-muted-foreground",
-                        hasEmailError
-                          ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
-                          : ""
-                      )}
-                    >
-                      {hasEmailError
-                        ? "Please enter a valid email address"
-                        : "Your email is required to verify your account."}
-                    </p>
-                  </>
-                );
-              }}
+                  )}
+                  <Input
+                    id="image"
+                    type="file"
+                    name={field.name}
+                    value={field.state.value}
+                    accept="image/*"
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="w-full items-center"
+                  />
+                </div>
+              )}
             />
             <form.Subscribe
               selector={(state) => state.canSubmit}
@@ -418,7 +440,7 @@ export default function SignUp() {
               children={(canSubmit) => (
                 <Button
                   type="submit"
-                  className="w-full cursor-pointer"
+                  className="mt-5 w-full cursor-pointer"
                   disabled={!canSubmit || form.state.isPristine}
                 >
                   Sign Up

@@ -29,7 +29,6 @@ function RouteComponent() {
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-8">Settings</h1>
-
       <div className="space-y-6">
         <Card>
           <CardHeader>
@@ -68,7 +67,6 @@ function RouteComponent() {
             </div>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
             <CardTitle>Privacy</CardTitle>
@@ -95,7 +93,6 @@ function RouteComponent() {
             </div>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
             <CardTitle>Notifications</CardTitle>

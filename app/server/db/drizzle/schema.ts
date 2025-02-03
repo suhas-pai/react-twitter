@@ -47,8 +47,8 @@ export const users = createTable(
   "users",
   {
     id: text().primaryKey(),
-    handle: varchar("name", { length: 256 }).notNull(),
-    displayName: varchar("display_name", { length: 256 }).notNull(),
+    handle: text("username").unique().notNull(),
+    displayName: text("display_name").notNull(),
     email: text("email").notNull().unique(),
     emailVerified: boolean("emailVerified").notNull(),
     iconUrl: varchar("icon_url")

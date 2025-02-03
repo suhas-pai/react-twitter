@@ -4,8 +4,8 @@ import { CalendarDays, Link2, MapPin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
-import type { Post } from "@/lib/post";
-import PostComponent from "@/components/post";
+import type { Post } from "~/lib/post";
+import PostComponent from "~/components/post";
 
 export const Route = createLazyFileRoute("/profile")({
   component: ProfilePage,
