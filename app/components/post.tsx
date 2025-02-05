@@ -13,17 +13,17 @@ import { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/client/trpc";
-
-import type { Post } from "@/lib/post";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
+
+import { trpc } from "~/client/trpc";
+import type { Post } from "~/lib/post";
+
 import { cn } from "~/lib/utils";
 
 export default function PostComponent({ post }: { post: Post }) {

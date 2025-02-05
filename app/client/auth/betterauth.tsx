@@ -7,9 +7,10 @@ import {
 } from "better-auth/client/plugins";
 
 import { createAuthClient } from "better-auth/react";
+
+import { ToastAction } from "@/components/ui/toast";
 import { getBaseUrl } from "~/client/trpc";
 import { useToast } from "~/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 
 const betterAuthClient = createAuthClient({
   baseURL: `${getBaseUrl()}/api/betterauth`,

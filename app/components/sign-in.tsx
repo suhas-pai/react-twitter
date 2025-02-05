@@ -21,9 +21,9 @@ import { Label } from "@/components/ui/label";
 
 import { signIn } from "~/client/auth/betterauth";
 import { authSchema } from "~/lib/auth/schema";
+import { cn } from "~/lib/utils";
 
 import { PasswordInput } from "./password-input";
-import { cn } from "~/lib/utils";
 import { EmailInput } from "./email-input";
 
 const formSchema = z.object({
@@ -102,6 +102,7 @@ export default function Login() {
                     name={field.name}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
+                    required
                   >
                     <p
                       className={cn(
