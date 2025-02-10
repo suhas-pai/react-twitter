@@ -92,7 +92,7 @@ export default function Login() {
                 return (
                   <EmailInput
                     className={cn(
-                      "peer pl-9",
+                      "peer",
                       hasErrors
                         ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
                         : ""
@@ -102,6 +102,7 @@ export default function Login() {
                     name={field.name}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
                     required
                   >
                     <p
@@ -131,6 +132,7 @@ export default function Login() {
                     name={field.name}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
                   >
                     <p className="text-[0.8rem] text-muted-foreground ">
                       Please provide your password.
@@ -142,7 +144,7 @@ export default function Login() {
                       defaultChecked={rememberMe}
                       onCheckedChange={(old) => setRememberMe(!old)}
                     />
-                    <Label htmlFor="remember-me">Remember me</Label>
+                    <Label htmlFor="remember-me">Remember Me</Label>
                   </div>
                 </>
               )}

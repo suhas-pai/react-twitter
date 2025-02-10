@@ -1,11 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Search, TrendingUp } from "lucide-react";
 
-import PostComponent from "~/components/post";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import PostComponent from "~/components/post";
 import type { Post } from "~/lib/post";
 
 export const Route = createLazyFileRoute("/explore")({

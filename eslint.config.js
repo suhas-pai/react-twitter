@@ -3,6 +3,7 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
+import { tanstackConfig } from "@tanstack/config/eslint";
 
 // @ts-expect-error
 import reactCompiler from "eslint-plugin-react-compiler";
@@ -28,6 +29,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "react-compiler/react-compiler": "error",
+      ...tanstackConfig,
     },
   }
 );

@@ -1,6 +1,10 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
+import { twoFactor, username } from "better-auth/plugins";
+import { magicLink } from "better-auth/plugins/magic-link";
+import { passkey } from "better-auth/plugins/passkey";
+
 import { defineEventHandler, toWebRequest } from "vinxi/http";
 
 import { getBaseUrl } from "~/client/trpc";
@@ -8,10 +12,6 @@ import { db } from "~/server/db/drizzle";
 
 import { account, session, users, verification } from "../db/drizzle/schema";
 import { authSchema } from "~/lib/auth/schema";
-
-import { twoFactor, username } from "better-auth/plugins";
-import { magicLink } from "better-auth/plugins/magic-link";
-import { passkey } from "better-auth/plugins/passkey";
 
 export const auth = betterAuth({
   basePath: "/api/betterauth",

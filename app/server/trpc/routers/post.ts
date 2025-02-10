@@ -124,7 +124,6 @@ export const postRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.db.delete(posts).where(eq(posts.id, input.id));
-
       if (!result) {
         throw new Error("Post not found to delete");
       }

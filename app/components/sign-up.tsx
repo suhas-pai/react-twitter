@@ -3,7 +3,7 @@ import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 
-import { Check, X } from "lucide-react";
+import { AtSign, Check, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +51,7 @@ const formSchema = z.object({
     }),
   retypedPassword: z.string(),
   email: z.string().email({ message: "Email address is invalid" }),
-  iconImage: z.string(),
+  iconImage: z.string().nonempty(),
 });
 
 const OrContinueWith = () => {
@@ -135,7 +135,6 @@ function PasswordSecurityInfo({
           style={{ width: `${(strengthScore / 4) * 100}%` }}
         />
       </div>
-
       {/* Password strength description */}
       <p
         id="password-strength"
@@ -143,7 +142,6 @@ function PasswordSecurityInfo({
       >
         {getStrengthText(strengthScore)}. Must contain:
       </p>
-
       {/* Password requirements list */}
       <ul className="space-y-1.5" aria-label="Password requirements">
         {strength.map((req) => (
@@ -233,6 +231,7 @@ export default function SignUp() {
                         name={field.name}
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
                       />
                       <p
                         className={cn(
@@ -261,15 +260,28 @@ export default function SignUp() {
                   return (
                     <div className="w-full">
                       <Label>
-                        Username <span className="text-destructive">*</span>
+                        Username/Handle{" "}
+                        <span className="text-destructive">*</span>
                       </Label>
-                      <Input
-                        autoComplete="username"
-                        required
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      />
+                      <div className="relative">
+                        <Input
+                          className="pl-9"
+                          autoComplete="username"
+                          required
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                        />
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 text-muted-foreground/80 peer-disabled:opacity-50">
+                          <AtSign
+                            size={16}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                        </div>
+                      </div>
                       <p
                         className={cn(
                           "text-[0.8rem] text-muted-foreground",
@@ -291,7 +303,7 @@ export default function SignUp() {
               name="email"
               // biome-ignore lint/correctness/noChildrenProp: <explanation>
               children={(field) => {
-                const hasEmailError =
+                const hasError =
                   field.state.meta.isTouched &&
                   field.state.meta.errors.length > 0;
 
@@ -299,7 +311,7 @@ export default function SignUp() {
                   <EmailInput
                     className={cn(
                       "peer pl-9",
-                      hasEmailError
+                      hasError
                         ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
                         : ""
                     )}
@@ -311,16 +323,17 @@ export default function SignUp() {
                     name={field.name}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
                   >
                     <p
                       className={cn(
                         "text-[0.8rem] text-muted-foreground",
-                        hasEmailError
+                        hasError
                           ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30 font-medium"
                           : ""
                       )}
                     >
-                      {hasEmailError
+                      {hasError
                         ? "Please enter a valid email address"
                         : "Your email is required to verify your account."}
                     </p>
@@ -351,8 +364,9 @@ export default function SignUp() {
                       name={field.name}
                       value={field.state.value}
                       placeholder="Password"
-                      onChange={(e) => field.handleChange(e.target.value)}
                       autoComplete="new-password"
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
                     />
                     <p className="text-[0.8rem] text-muted-foreground">
                       Your password is required to be secure.
@@ -370,7 +384,7 @@ export default function SignUp() {
               // biome-ignore lint/correctness/noChildrenProp: <explanation>
               children={(field) => {
                 const password = form.getFieldValue("password");
-                const hasPasswordsError =
+                const hasError =
                   password !== field.state.value &&
                   password !== "" &&
                   field.state.value !== "";
@@ -379,7 +393,7 @@ export default function SignUp() {
                   <>
                     <PasswordInput
                       className={
-                        hasPasswordsError
+                        hasError
                           ? "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/30"
                           : ""
                       }
@@ -392,19 +406,20 @@ export default function SignUp() {
                       name={field.name}
                       value={field.state.value}
                       placeholder="Retype Password"
-                      onChange={(e) => field.handleChange(e.target.value)}
                       autoComplete="new-password"
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
                     />
                     <p
                       className={cn(
                         "text-[0.8rem]",
-                        hasPasswordsError
+                        hasError
                           ? "mt-2 text-xs text-destructive font-medium"
                           : "text-muted-foreground"
                       )}
                       aria-live="polite"
                     >
-                      {hasPasswordsError
+                      {hasError
                         ? "Passwords do not match"
                         : "Re-enter your password."}
                     </p>
@@ -423,13 +438,14 @@ export default function SignUp() {
                     </div>
                   )}
                   <Input
-                    id="image"
+                    className="w-full items-center"
+                    required
                     type="file"
                     name={field.name}
                     value={field.state.value}
                     accept="image/*"
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full items-center"
+                    onBlur={field.handleBlur}
                   />
                 </div>
               )}
