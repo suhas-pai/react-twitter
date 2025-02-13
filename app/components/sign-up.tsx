@@ -191,13 +191,16 @@ export default function SignUp() {
     onSubmit: async ({
       value: { displayName, username, email, password, iconImage },
     }) => {
-      await signUp.email({
+      console.log("Signing up...");
+      const result = await signUp.email({
         name: displayName,
         email,
         password,
         username,
         image: iconImage,
       });
+
+      console.log(result);
     },
   });
 
@@ -211,7 +214,14 @@ export default function SignUp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-3">
+          <form
+            className="space-y-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
             <div className="flex flex-row justify-between gap-5">
               <form.Field
                 name="displayName"
@@ -320,6 +330,7 @@ export default function SignUp() {
                         Email <span className="text-destructive">*</span>
                       </>
                     }
+                    autoComplete="email"
                     name={field.name}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -451,15 +462,15 @@ export default function SignUp() {
               )}
             />
             <form.Subscribe
-              selector={(state) => state.canSubmit}
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
               // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(canSubmit) => (
+              children={([canSubmit, isSubmitting]) => (
                 <Button
                   type="submit"
                   className="mt-5 w-full cursor-pointer"
                   disabled={!canSubmit || form.state.isPristine}
                 >
-                  Sign Up
+                  {isSubmitting ? "..." : "Sign Up"}
                 </Button>
               )}
             />

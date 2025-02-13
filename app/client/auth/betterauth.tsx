@@ -23,14 +23,7 @@ const betterAuthClient = createAuthClient({
   ],
   fetchOptions: {
     onError(e) {
-      const { toast } = useToast();
-      if (e.error.status === 429) {
-        toast({
-          title: "Error",
-          description: "Too many requests. Please try again later.",
-          action: <ToastAction altText="Dismiss Toast">Dismiss</ToastAction>,
-        });
-      }
+      console.log(e);
     },
   },
 });
