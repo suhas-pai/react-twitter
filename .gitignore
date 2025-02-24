@@ -47,8 +47,14 @@ yarn-error.log*
 # Million Lint
 .million
 
+# Jj
+.jj
+
 # Vinxi
 .vinxi
+
+# Visual Studio Code
+.vscode
 
 # Drizzle
 drizzle/

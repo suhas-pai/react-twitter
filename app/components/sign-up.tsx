@@ -167,7 +167,7 @@ function PasswordSecurityInfo({
             >
               {req.text}
               <span className="sr-only">
-                {req.met ? " - Requirement met" : " - Requirement not met"}
+                {` - Requirement ${req.met ? "met" : "not met"}`}
               </span>
             </span>
           </li>

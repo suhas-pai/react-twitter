@@ -2,7 +2,7 @@
 
 A remake of X (formerly Twitter) with the technologies listed below
 
-- [Bun](https://bun.sh) as bundler
+- [Bun](https://bun.sh) as runtime and bundler
 - [ReactTS](https://react.dev) as framework
 - [TanStack Router](https://tanstack.com/router/latest) for Routing
 - [Vinxi](https://vinxi.vercel.app/) + [Nitro](https://nitro.build/) for backend
