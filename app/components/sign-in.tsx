@@ -81,10 +81,8 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <form className="space-y-6">
-            <form.Field
-              name="email"
-              // biome-ignore lint/correctness/noChildrenProp: <explanation></explanation>
-              children={(field) => {
+            <form.Field name="email">
+              {(field) => {
                 const hasErrors =
                   field.state.meta.isTouched &&
                   field.state.meta.errors.length > 0;
@@ -120,11 +118,9 @@ export default function Login() {
                   </EmailInput>
                 );
               }}
-            />
-            <form.Field
-              name="password"
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(field) => (
+            </form.Field>
+            <form.Field name="password">
+              {(field) => (
                 <>
                   <PasswordInput
                     label={"Password"}
@@ -148,11 +144,9 @@ export default function Login() {
                   </div>
                 </>
               )}
-            />
-            <form.Subscribe
-              selector={(state) => state.canSubmit}
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(canSubmit) => (
+            </form.Field>
+            <form.Subscribe selector={(state) => state.canSubmit}>
+              {(canSubmit) => (
                 <Button
                   type="submit"
                   className="w-full cursor-pointer"
@@ -161,7 +155,7 @@ export default function Login() {
                   Log In
                 </Button>
               )}
-            />
+            </form.Subscribe>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
@@ -170,10 +164,8 @@ export default function Login() {
             or continue with
           </p>
           <div className="flex w-full justify-center space-x-4">
-            <form.Subscribe
-              selector={(state) => state.fieldMeta.email?.errors}
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={() => (
+            <form.Subscribe selector={(state) => state.fieldMeta.email?.errors}>
+              {() => (
                 <Button
                   variant="outline"
                   className="w-full cursor-pointer"
@@ -187,7 +179,7 @@ export default function Login() {
                   <span>Login with Magic Link</span>
                 </Button>
               )}
-            />
+            </form.Subscribe>
           </div>
           <Button variant="link">
             <Link to="/signup">Don't have an account? Sign Up</Link>

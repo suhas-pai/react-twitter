@@ -223,10 +223,8 @@ export default function SignUp() {
             }}
           >
             <div className="flex flex-row justify-between gap-5">
-              <form.Field
-                name="displayName"
-                // biome-ignore lint/correctness/noChildrenProp: <explanation>
-                children={(field) => {
+              <form.Field name="displayName">
+                {(field) => {
                   const hasError =
                     field.state.meta.isTouched &&
                     field.state.meta.errors.length > 0;
@@ -258,11 +256,9 @@ export default function SignUp() {
                     </div>
                   );
                 }}
-              />
-              <form.Field
-                name="username"
-                // biome-ignore lint/correctness/noChildrenProp: <explanation>
-                children={(field) => {
+              </form.Field>
+              <form.Field name="username">
+                {(field) => {
                   const hasError =
                     field.state.meta.isTouched &&
                     field.state.meta.errors.length > 0;
@@ -307,12 +303,10 @@ export default function SignUp() {
                     </div>
                   );
                 }}
-              />
+              </form.Field>
             </div>
-            <form.Field
-              name="email"
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(field) => {
+            <form.Field name="email">
+              {(field) => {
                 const hasError =
                   field.state.meta.isTouched &&
                   field.state.meta.errors.length > 0;
@@ -351,11 +345,9 @@ export default function SignUp() {
                   </EmailInput>
                 );
               }}
-            />
-            <form.Field
-              name="password"
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(field) => {
+            </form.Field>
+            <form.Field name="password">
+              {(field) => {
                 const strength = checkStrength(field.state.value);
                 const strengthScore = strength.filter((req) => req.met).length;
 
@@ -389,11 +381,9 @@ export default function SignUp() {
                   </>
                 );
               }}
-            />
-            <form.Field
-              name="retypedPassword"
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(field) => {
+            </form.Field>
+            <form.Field name="retypedPassword">
+              {(field) => {
                 const password = form.getFieldValue("password");
                 const hasError =
                   password !== field.state.value &&
@@ -437,11 +427,9 @@ export default function SignUp() {
                   </>
                 );
               }}
-            />
-            <form.Field
-              name="iconImage"
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={(field) => (
+            </form.Field>
+            <form.Field name="iconImage">
+              {(field) => (
                 <div className="flex items-center gap-2 w-full">
                   {field.state.value && (
                     <div className="relative w-16 h-16 rounded-sm overflow-hidden">
@@ -460,11 +448,11 @@ export default function SignUp() {
                   />
                 </div>
               )}
-            />
+            </form.Field>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
-              // biome-ignore lint/correctness/noChildrenProp: <explanation>
-              children={([canSubmit, isSubmitting]) => (
+            >
+              {([canSubmit, isSubmitting]) => (
                 <Button
                   type="submit"
                   className="mt-5 w-full cursor-pointer"
@@ -473,7 +461,7 @@ export default function SignUp() {
                   {isSubmitting ? "..." : "Sign Up"}
                 </Button>
               )}
-            />
+            </form.Subscribe>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
