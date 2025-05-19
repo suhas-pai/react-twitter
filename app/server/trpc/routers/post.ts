@@ -1,5 +1,5 @@
 import type { Post } from "~/lib/post";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { timedProcedure } from "~/server/trpc/api";
 import { createTRPCRouter } from "~/server/trpc/api";

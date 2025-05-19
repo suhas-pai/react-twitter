@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 
 import React from "react";
 import { Mail } from "lucide-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { Button } from "@/components/ui/button";
 
@@ -27,14 +27,14 @@ import { PasswordInput } from "./password-input";
 import { EmailInput } from "./email-input";
 
 const formSchema = z.object({
-  email: z.string().email({ message: "Email address is invalid" }),
+  email: z.email({ error: "Email address is invalid" }),
   password: z
     .string()
     .min(authSchema.passwordMinLength, {
-      message: "Password must be at least 6 characters",
+      error: "Password must be at least 6 characters",
     })
     .max(authSchema.passwordMaxLength, {
-      message: "Password must be less than 50 characters",
+      error: "Password must be less than 50 characters",
     }),
 });
 

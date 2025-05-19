@@ -1,14 +1,20 @@
 import { initTRPC } from "@trpc/server";
 import { db } from "~/server/db/drizzle";
-import { ZodError } from "zod";
+import z, { ZodError } from "zod/v4";
 import superjson from "superjson";
+import { getSession } from "../auth/betterauth";
 
 export const createTRPCContext = async (opts: {
   headers: Headers;
   req: Request;
 }) => {
+  const session = await getSession({
+    headers: opts.headers,
+  });
+
   return {
     db,
+    session,
     ...opts,
   };
 };
@@ -21,7 +27,7 @@ export const t = initTRPC.context<typeof createTRPCContext>().create({
       data: {
         ...shape.data,
         zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+          error.cause instanceof ZodError ? z.treeifyError(error.cause) : null,
       },
     };
   },

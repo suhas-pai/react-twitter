@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
@@ -28,29 +28,29 @@ const formSchema = z.object({
   displayName: z
     .string()
     .min(authSchema.displayNameMinLength, {
-      message: `Display name must be at least ${authSchema.displayNameMinLength} characters`,
+      error: `Display name must be at least ${authSchema.displayNameMinLength} characters`,
     })
     .max(authSchema.displayNameMaxLength, {
-      message: `Display name must be at most ${authSchema.displayNameMaxLength} characters`,
+      error: `Display name must be at most ${authSchema.displayNameMaxLength} characters`,
     }),
   username: z
     .string()
     .min(authSchema.usernameMinLength, {
-      message: `Username must be at least ${authSchema.usernameMinLength} characters`,
+      error: `Username must be at least ${authSchema.usernameMinLength} characters`,
     })
     .max(authSchema.usernameMaxLength, {
-      message: `Username must be less than ${authSchema.usernameMaxLength} characters`,
+      error: `Username must be less than ${authSchema.usernameMaxLength} characters`,
     }),
   password: z
     .string()
     .min(authSchema.passwordMinLength, {
-      message: `Password must be at least ${authSchema.passwordMinLength} characters`,
+      error: `Password must be at least ${authSchema.passwordMinLength} characters`,
     })
     .max(authSchema.passwordMaxLength, {
-      message: `Password must be less than ${authSchema.passwordMinLength} characters`,
+      error: `Password must be less than ${authSchema.passwordMinLength} characters`,
     }),
   retypedPassword: z.string(),
-  email: z.string().email({ message: "Email address is invalid" }),
+  email: z.email({ error: "Email address is invalid" }),
   iconImage: z.string().nonempty(),
 });
 

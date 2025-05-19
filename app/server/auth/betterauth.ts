@@ -12,6 +12,7 @@ import { db } from "~/server/db/drizzle";
 
 import { account, session, users, verification } from "../db/drizzle/schema";
 import { authSchema } from "~/lib/auth/schema";
+import { cache } from "react";
 
 export const auth = betterAuth({
   basePath: "/api/betterauth",
@@ -54,3 +55,5 @@ export default defineEventHandler((event) => {
   const request = toWebRequest(event);
   console.log(request);
 });
+
+export const getSession = cache(auth.api.getSession)
